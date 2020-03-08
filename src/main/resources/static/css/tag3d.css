@@ -1,0 +1,31 @@
+/**
+ * @Ver 1.0.3200307
+ * @ruan4261.com
+ */
+.tagBall {
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    position: relative;
+    background-color: rgba(155, 155, 155, 0.1);
+    overflow: hidden;
+}
+
+.tag {
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    color: #000;
+    text-decoration: none;
+    font-size: 20px;
+    font-family: "微软雅黑";
+    font-weight: bold;
+    word-break: keep-all;
+    width: 18rem;
+    text-align: center;
+}
+
+.tag:hover {
+    text-decoration: none;
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Error | '+${application.headMap['title']}">Hello,ruan4261!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta name="description" th:content="${application.headMap['description']}">
+    <meta name="keywords" th:content="${application.headMap['keywords']}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <!--CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/tag3d.css" rel="stylesheet">
+    <!--全局声明Package-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <!--popper用于支持bootstrapVer4.4.1-->
+    <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script>
+        //语言适配器，使用方法：将语言代码当做参数传进来
+        //此处源码为thymeleaf转义
+        //此处有一个用于idea中的format格式化锁，禁止排版
+        //@formatter:off
+        let langToggle = function (param) {
+            let queryString='[[${#request.queryString}]]';
+            let arr=queryString.split('&amp;');
+            for (let i=0;i<arr.length;){
+                if (arr[i].indexOf('lang=')!=-1){//自删
+                    arr.splice(i,1);
+                    continue;
+                }
+                i++;
+            }
+            queryString=arr.join("&");
+            if (queryString.trim()!=''){
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param+'&'+queryString;
+            }else {
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param;
+            }
+        }
+        //@formatter:on
+        //最后，祝thymeleaf早日成佛，别渡我这个莎比————我第一次知道了什么叫做一页代码改一天
+    </script>
+</head>
+<body>
+<header th:replace="common/common.html::body-header"></header>
+<nav th:replace="common/common.html::left-nav"></nav>
+<section class="blog-body" id="section">
+    <div class="container">
+        <div class="row">
+            <!--占位侧板-->
+            <div class="hidden-more-1200 col-lg-1 hidden-less-992"></div>
+            <!--内容限制区 col-9-->
+            <div class="blog-content-panel col-xl-9 col-lg-10 col-12">
+                <div style="font-size: 8rem">Error Code
+                    <h1 style="font-size: 6rem" th:text="${errorCode}"></h1>
+                </div>
+                <div style="font-size: 8rem">Error Message
+                    <h1 th:if="${msg!=null}" style="font-size: 4rem" th:text="${msg}"></h1>
+                    <br th:if="${msg==null}"><span style="font-size: 4rem">现实带有孔洞，就好像..甜甜圈一样。</span>
+                </div>
+            </div>
+            <!--信息 col-3-->
+            <div th:replace="common/common.html::info-panel"></div>
+            <!--占位侧板-->
+            <div class="hidden-more-1200 col-lg-1 hidden-less-992"></div>
+        </div>
+    </div>
+</section>
+<footer th:replace="common/common.html::body-footer"></footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/tag3d.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/infoPanel.js"></script>
+</html>

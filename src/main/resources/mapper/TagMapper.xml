@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ruan.blog.mapper.TagMapper">
+
+    <!--映射-->
+    <resultMap id="tagMap" type="Tag">
+        <id property="id" column="tag_id"/>
+        <result property="name" column="tag_name"/>
+        <result property="count" column="tag_count"/>
+    </resultMap>
+
+    <!--接口-->
+    <insert id="addTag" parameterType="Tag" useGeneratedKeys="true" keyProperty="id">
+        insert tb_tag(tag_name,tag_count)
+        value(#{name},#{count});
+    </insert>
+    <select id="getTag" parameterType="Tag" resultMap="tagMap">
+        select * from tb_tag
+        where
+        <choose>
+            <when test="id!=null">
+                tag_id=#{id};
+            </when>
+            <otherwise>
+                tag_name like #{name};
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getTagList" resultMap="tagMap">
+        select * from tb_tag
+        <if test="tag!=null and tag.name!=null">
+            where tag_name like #{tag.name}
+        </if>
+        order by tag_count desc
+        <if test="size!=null and size&gt;0">
+            limit 0,#{size}
+        </if>;
+    </select>
+    <update id="updateTag" parameterType="Tag">
+        update tb_tag
+        set tag_name=#{name},tag_count=#{count}
+        where tag_id=#{id};
+    </update>
+    <delete id="deleteTag" parameterType="Tag">
+        delete from tb_tag
+        where tag_id=#{id};
+    </delete>
+
+</mapper>

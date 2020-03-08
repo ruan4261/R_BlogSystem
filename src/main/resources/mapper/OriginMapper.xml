@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ruan.blog.mapper.OriginMapper">
+
+    <!--映射-->
+    <resultMap id="originMap" type="Origin">
+        <id property="id" column="origin_id"/>
+        <result property="browser" column="origin_browser"/>
+        <result property="system" column="origin_system"/>
+        <result property="ip" column="origin_ip"/>
+        <result property="address" column="origin_address"/>
+        <result property="isp" column="origin_isp"/>
+    </resultMap>
+
+    <!--接口-->
+    <insert id="addOrigin" parameterType="Origin" useGeneratedKeys="true" keyProperty="id">
+        insert tb_origin(origin_browser,origin_system,origin_ip,origin_address,origin_isp)
+        value(#{browser},#{system},#{ip},#{address},#{isp});
+    </insert>
+    <select id="getOrigin" parameterType="Origin" resultMap="originMap">
+        select * from tb_origin
+        where origin_id=#{id};
+    </select>
+    <select id="getOriginList" parameterType="Origin" resultMap="originMap">
+        select * from tb_origin
+        <trim prefix="where" prefixOverrides="and |or ">
+            <if test="ip!=null">
+                origin_ip like #{ip}
+            </if>
+            <if test="browser!=null">
+                and origin_browser like #{browser}
+            </if>
+            <if test="system!=null">
+                and origin_system like #{system}
+            </if>
+            <if test="address!=null">
+                and origin_address like #{address}
+            </if>
+            <if test="isp!=null">
+                and origin_isp like #{isp}
+            </if>
+        </trim>
+        ;
+    </select>
+    <update id="updateOrigin" parameterType="Origin">
+        update tb_origin
+        set origin_browser=#{browser},origin_system=#{system},
+        origin_ip=#{ip},origin_address=#{address},origin_isp=#{isp}
+        where origin_id=#{id};
+    </update>
+    <delete id="deleteOrigin" parameterType="Origin">
+        delete from tb_origin
+        where origin_id=#{id}
+    </delete>
+</mapper>

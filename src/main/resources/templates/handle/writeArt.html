@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${application.headMap['title']}">Hello,ruan4261!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta name="description" th:content="${application.headMap['description']}">
+    <meta name="keywords" th:content="${application.headMap['keywords']}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <!--CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
+    <!--后台样式-->
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/backStyle.css" rel="stylesheet">
+    <!--js-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <!--popper用于支持bootstrapVer4.4.1-->
+    <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script>
+        //语言适配器，使用方法：将语言代码当做参数传进来
+        //此处源码为thymeleaf转义
+        //此处有一个用于idea中的format格式化锁，禁止排版
+        //@formatter:off
+        let langToggle = function (param) {
+            let queryString='[[${#request.queryString}]]';
+            let arr=queryString.split('&amp;');
+            for (let i=0;i<arr.length;){
+                if (arr[i].indexOf('lang=')!=-1){//自删
+                    arr.splice(i,1);
+                    continue;
+                }
+                i++;
+            }
+            queryString=arr.join("&");
+            if (queryString.trim()!=''){
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param+'&'+queryString;
+            }else {
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param;
+            }
+        }
+        //@formatter:on
+        //最后，祝thymeleaf早日成佛，别渡我这个莎比————我第一次知道了什么叫做一页代码改一天
+    </script>
+</head>
+<body>
+<header th:replace="common/common.html::body-header"></header>
+<nav th:replace="common/common.html::left-nav"></nav>
+<section>
+    <div class="container">
+        <div class="row">
+            <form action="/lain/writeArt.do" id="art-form" method="post" class="col-12 art-form">
+                <div class="write-art-info">
+                    <span>YES提交为博客文章,NO提交自定义文件名至服务器保存文件夹</span><br>
+                    <span class="yes">Yes</span>&nbsp;<input type="radio" name="isDB" value="1"/>
+                    <span class="no">No</span>&nbsp;<input type="radio" name="isDB" value="0" checked="checked">&nbsp;&nbsp;
+                    <span class="json-file-name">自定义文件名(自动生成.json):</span>&nbsp;
+                    <input type="text" name="jsonFileName" class="json-file-name"/>
+                    <hr>
+                    <!--当上一项为YES时才显示-->
+                    <div class="article-info-control" style="display: none">
+                        <span>发布至博客RSS</span><br>
+                        <span class="yes">Yes</span>&nbsp;<input type="radio" name="isRSS" value="1"/>
+                        <span class="no">No</span>&nbsp;<input type="radio" name="isRSS" value="0" checked="checked"/>
+                        <hr>
+                        <span>博客标题</span><br>
+                        <input type="text" name="title" placeholder="博客标题" style="width: 100%"/>
+                        <hr>
+                        <span>标签(标签之间请用*号分割)</span><br>
+                        <input type="text" name="tags" placeholder="标签A*标签B*标签C" style="width: 100%">
+                        <hr>
+                        <span>发布即置顶</span><br>
+                        <span class="yes">Yes</span>&nbsp;<input type="radio" name="top" value="1"/>
+                        <span class="no">No</span>&nbsp;<input type="radio" name="top" value="0" checked="checked"/>
+                        <hr>
+                        <span>保存当前内容为简介(文本不得大于3000)</span><br>
+                        <button type="button" id="toDesc">To Desc.</button>
+                        <input type="hidden" name="desc" id="desc">
+                        <hr>
+                    </div>
+                </div>
+                <textarea id="editor" name="content"></textarea>
+                <button type="button" id="art-submit" class="art-submit">提交</button>
+            </form>
+        </div>
+    </div>
+</section>
+<footer th:replace="common/common.html::body-footer"></footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor');
+    $("input:radio[name='isDB']").change(function () {
+        if ($("input:radio[name='isDB']:checked").val() == 1) {
+            $(".article-info-control").css("display", "inline-block");
+            $(".json-file-name").css("display", "none");
+        } else {
+            $(".article-info-control").css("display", "none");
+            $(".json-file-name").css("display", "inline-block");
+        }
+    });
+    $('#toDesc').click(function () {
+        let desc = CKEDITOR.instances.editor.getData();
+        if (desc.length > 3000) {
+            alert("简介文本内容过载！")
+        } else {
+            $('#desc').val(desc);
+            alert("保存成功！by ruan4261.");
+        }
+    });
+    $('#art-submit').click(function () {
+        if (confirm('请先确认文章标题标签等信息无误！\n确认提交？')) {
+            if ($('input[name="isDB"]')[0].checked == false) {
+                $('#art-form').submit();
+                return;
+            }
+            if ($('input[name="title"]').val().trim() != "" &&
+                $('input[name="tags"]').val().trim() != "") {
+                $('#art-form').submit();
+            } else {
+                alert('表单信息不完整，请核查！');
+            }
+        }
+    });
+</script>
+</html>

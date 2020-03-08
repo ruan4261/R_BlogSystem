@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ruan.blog.mapper.ArticleMapper">
+
+    <!--映射-->
+    <resultMap id="articleMap" type="Article">
+        <id property="id" column="article_id"/>
+        <result property="title" column="article_title"/>
+        <result property="desc" column="article_desc"/>
+        <result property="look" column="article_look"/>
+        <result property="time" column="article_time"/>
+        <result property="tags" column="article_tags"/>
+        <result property="score" column="article_score"/>
+        <result property="scoreNumber" column="article_score_number"/>
+        <result property="top" column="article_top"/>
+        <association property="origin" javaType="Origin">
+            <id property="id" column="origin_id"/>
+            <result property="browser" column="origin_browser"/>
+            <result property="system" column="origin_system"/>
+            <result property="ip" column="origin_ip"/>
+            <result property="address" column="origin_address"/>
+            <result property="isp" column="origin_isp"/>
+        </association>
+    </resultMap>
+    <resultMap id="timelineMap" type="java.util.LinkedHashMap">
+        <result property="key" column="time" javaType="java.util.Date"/>
+        <result property="value" column="count" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <!--接口-->
+    <insert id="addArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id">
+        insert tb_article(article_title,article_desc,article_time,article_tags,article_top,article_origin)
+        value(#{title},#{desc},#{time},#{tags},#{top},#{origin.id});
+    </insert>
+    <select id="getArticleCount" parameterType="Article" resultType="Integer">
+        select count(article_id) from tb_article as a
+        left outer join tb_origin as o on a.article_origin=o.origin_id
+        <trim prefix="where" prefixOverrides="and |or ">
+            <if test="title!=null">
+                a.article_title like #{title}
+            </if>
+            <if test="desc!=null">
+                and a.article_desc like #{desc}
+            </if>
+            <if test="tags!=null">
+                and a.article_tags like #{tags}
+            </if>
+            <if test="top!=null">
+                and a.article_top=#{top}
+            </if>
+            <if test="origin!=null">
+                <if test="origin.browser!=null">
+                    and o.origin_browser like #{origin.browser}
+                </if>
+                <if test="origin.system!=null">
+                    and o.origin_system like #{origin.system}
+                </if>
+                <if test="origin.address!=null">
+                    and o.origin_address like #{origin.address}
+                </if>
+                <if test="origin.isp!=null">
+                    and o.origin_isp like #{origin.isp}
+                </if>
+            </if>
+        </trim>
+    </select>
+    <select id="getArticle" resultMap="articleMap">
+        select * from tb_article as a
+        left outer join tb_origin as o on a.article_origin=o.origin_id
+        where a.article_id=#{id}
+    </select>
+    <select id="getArticleList" resultMap="articleMap">
+        select * from tb_article as a
+        left outer join tb_origin as o on a.article_origin=o.origin_id
+        <trim prefix="where" prefixOverrides="and |or ">
+            <if test="article.title!=null">
+                a.article_title like #{article.title}
+            </if>
+            <if test="article.desc!=null">
+                and a.article_desc like #{article.desc}
+            </if>
+            <if test="article.tags!=null">
+                and a.article_tags like #{article.tags}
+            </if>
+            <if test="article.top!=null">
+                and a.article_top=#{article.top}
+            </if>
+            <if test="article.origin!=null">
+                <if test="article.origin.browser!=null">
+                    and o.origin_browser like #{article.origin.browser}
+                </if>
+                <if test="article.origin.system!=null">
+                    and o.origin_system like #{article.origin.system}
+                </if>
+                <if test="article.origin.address!=null">
+                    and o.origin_address like #{article.origin.address}
+                </if>
+                <if test="article.origin.isp!=null">
+                    and o.origin_isp like #{article.origin.isp}
+                </if>
+            </if>
+        </trim>
+        <choose>
+            <when test="order==null or order&lt;2">
+                order by a.article_top desc,a.article_time desc
+            </when>
+            <when test="order==2">
+                order by a.article_top desc,a.article_score desc
+            </when>
+            <when test="order==3">
+                order by a.article_top desc,a.article_look desc
+            </when>
+        </choose>
+        <if test="pageOpen!=null and pageSize!=null">
+            limit #{pageOpen},#{pageSize}
+        </if>;
+    </select>
+    <update id="updateArticle" parameterType="Article">
+        update tb_article set article_title=#{title},article_desc=#{desc},article_tags=#{tags},
+        article_top=#{top},article_origin=#{origin.id},article_look=#{look},article_score=#{score},article_score_number=#{scoreNumber}
+        where article_id=#{id};
+    </update>
+    <delete id="deleteArticle" parameterType="Article">
+        delete from tb_article
+        where article_id=#{id};
+    </delete>
+    <select id="getArticleListByTimeline" resultMap="articleMap">
+        SELECT article_id,article_title,article_time,article_tags,article_score,article_score_number FROM tb_article
+        <if test="open!=null and end!=null">
+            where article_time&gt;=#{open} and article_time&lt;=#{end}
+        </if>
+        order by article_time desc
+    </select>
+    <select id="getTimelineArticleCount" resultMap="timelineMap">
+        select date(article_time) as time,count(article_id) as count from tb_article
+        group by year(article_time),month(article_time) order by time desc;
+    </select>
+</mapper>

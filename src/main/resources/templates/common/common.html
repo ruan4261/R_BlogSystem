@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<!--公共head段，首要作为保留数据，请勿使用-->
+<head th:fragment="blog-head">
+    <meta charset="UTF-8">
+    <title th:text="${application.headMap['title']}">Hello,ruan4261!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta name="description" th:content="${application.headMap['description']}">
+    <meta name="keywords" th:content="${application.headMap['keywords']}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <!--CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/tag3d.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/styles/an-old-hope.css" rel="stylesheet">
+    <!--后台样式-->
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/backStyle.css" rel="stylesheet">
+    <!--全局声明Package-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <!--popper用于支持bootstrapVer4.4.1-->
+    <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script>
+        //语言适配器，使用方法：将语言代码当做参数传进来
+        //此处源码为thymeleaf转义
+        //此处有一个用于idea中的format格式化锁，禁止排版
+        //@formatter:off
+        let langToggle = function (param) {
+            let queryString='[[${#request.queryString}]]';
+            let arr=queryString.split('&amp;');
+            for (let i=0;i<arr.length;){
+                if (arr[i].indexOf('lang=')!=-1){//自删
+                    arr.splice(i,1);
+                    continue;
+                }
+                i++;
+            }
+            queryString=arr.join("&");
+            if (queryString.trim()!=''){
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param+'&'+queryString;
+            }else {
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param;
+            }
+        }
+        //@formatter:on
+        //最后，祝thymeleaf早日成佛，别渡我这个莎比————我第一次知道了什么叫做一页代码改一天
+    </script>
+</head>
+<!--公共头部-->
+<header th:fragment="body-header">
+    <!--回顶按钮-->
+    <div class="return-top">
+        <a class="up-button" onclick="pageUp()">
+            <i class="fas fa-angle-up fa-lg"></i><span class="hidden-less-1200">To Top</span>
+        </a>
+        <br>
+        <hr>
+        <a class="down-button" onclick="pageDown()">
+            <i class="fas fa-angle-down fa-lg"></i><span class="hidden-less-1200">To Bottom</span>
+        </a>
+    </div>
+    <!--顶部背景图片-->
+    <div class="nav-background"></div>
+    <div class="nav-background-image-overflow">
+        <!--<img class="nav-background-image" th:src="@{/image/sakurakouji.jpg}"/>-->
+    </div>
+    <!--fixed top总是存在-->
+    <div class="container the-top">
+        <!--小窗口下的的nav的打开按钮-->
+        <div id="left-nav-open" class="hidden-more-1200 float-left left-nav-button">
+            <i class="fas fa-angle-right fa-lg"></i>
+        </div>
+        <!--总是存在的LOGO-->
+        <div class="blog-logo">Ruan4261</div>
+        <!--大窗口下的nav-->
+        <div class="hidden-less-1200 nav-pc-container">
+            <ul class="nav-pc">
+                <li class="nav-li"><a th:href="@{/}" th:text="#{blog.home}">主页</a></li>
+                <li class="nav-li">
+                    <a class="drop-button" href="javascript:void(0);" th:text="#{blog.archives}">归档</a>
+                    <ul class="drop-show">
+                        <li><a th:href="@{/archives/timeline#section}" th:text="#{archives.timeline}">时间线</a></li>
+                        <li><a th:href="@{/archives/tag#section}" th:text="#{archives.tag}">标签</a></li>
+                        <li><a th:href="@{/archives/score#section}" th:text="#{archives.score}">评分</a></li>
+                        <li><a th:href="@{/archives/looktimes#section}" th:text="#{archives.looktimes}">观看量</a></li>
+                    </ul>
+                </li>
+                <li class="nav-li">
+                    <a class="drop-button" href="javascript:void(0);" th:text="#{blog.api}">接口</a>
+                    <ul class="drop-show">
+                        <li><a href="javascript:void(0);">赛王</a></li>
+                    </ul>
+                </li>
+                <li class="nav-li">
+                    <a class="drop-button" href="javascript:void(0);" th:text="#{blog.message}">留言</a>
+                    <ul class="drop-show">
+                        <li><a th:href="@{/message#section}" th:text="#{message.message}">留言板</a></li>
+                        <li><a th:href="@{/chat#section}" th:text="#{message.chat}">聊天室</a></li>
+                    </ul>
+                </li>
+                <li class="nav-li">
+                    <a class="drop-button" href="javascript:void(0);" th:text="#{blog.about}">关于</a>
+                    <ul class="drop-show">
+                        <li><a th:href="@{/about.htm#section}" th:text="#{blog.about}">关于</a></li>
+                        <li><a th:href="@{/link.htm#section}" th:text="#{blog.link}">友链</a></li>
+                        <li><a th:href="@{/history.htm#section}" th:text="#{blog.history}">历史</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!--总是存在的国际化选项-->
+        <div class="float-right lang-center">
+            <a role="button">
+                <span>Language</span>
+            </a>
+            <ul class="lang-menu">
+                <li>
+                    <a onclick="langToggle('zh_CN')">简体中文</a>
+                </li>
+                <!--<li>
+                    <a onclick="langToggle('ja_JP')">日本語</a>
+                </li>-->
+                <li>
+                    <a onclick="langToggle('en_US')">English</a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!--最顶部的信息面板-->
+    <div style="position: relative;">
+        <div class="maru-atama">
+            <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg"/>
+        </div>
+        <div class="info-shade">
+            <!--顶部文字-->
+            <div class="my-title">
+                <h1 style="text-align: center;" th:text="#{blog.title}">blog title</h1>
+            </div>
+            <!--顶部个人链接-->
+            <div class="my-link">
+                <ul class="my-link-list">
+                    <li class="my-link-list-li">
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/qq.png"/>
+                        <a href="tencent://message/?uin=2598055586&Site=&Menu=yes" target="_blank"></a>
+                    </li>
+                    <li class="my-link-list-li">
+                        <i class="fas fa-rss-square"></i>
+                        <a href="https://ruan4261.com/rss.xml" target="_blank"></a>
+                    </li>
+                    <li class="my-link-list-li">
+                        <i class="fab fa-github"></i>
+                        <a href="https://github.com/ruan4261" target="_blank"></a>
+                    </li>
+                    <li class="my-link-list-li">
+                        <i class="fab fa-npm"></i>
+                        <a href="https://www.npmjs.com/~ruan4261" target="_blank"></a>
+                    </li>
+                    <br class="hidden-more-992"/>
+                    <li class="my-link-list-li">
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/email.svg"
+                             title="ruan4261@foxmail.com"/>
+                        <a href="mailto:ruan4261@foxmail.com" target="_blank"></a>
+                    </li>
+                    <li class="my-link-list-li">
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/twitter.png" title="Twitter@ruan4261"/>
+                        <a href="https://twitter.com/ruan4261" target="_blank"></a>
+                    </li>
+                    <li class="my-link-list-li">
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/bilibili.png" title="BiliBili@林时雨"/>
+                        <a href="https://space.bilibili.com/23934967" target="_blank"></a>
+                    </li>
+                    <li class="my-link-list-li">
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/wangyiyun.png" title="网易云音乐@ruan4261"/>
+                        <a href="https://music.163.com/#/user/home?id=395832685" target="_blank"></a>
+                    </li>
+                    <div class="clearfix"></div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--全屏遮罩 适用于left-nav-->
+    <div class="shade"></div>
+</header>
+
+<!--小于1200px时使用的左侧导航-->
+<div class="left-nav" th:fragment="left-nav">
+    <!--关闭按钮-->
+    <div id="left-nav-close" class="left-nav-button-close">
+        <i class="fas fa-angle-left fa-lg"></i>
+    </div>
+    <!--头像-->
+    <div class="left-nav-image">
+        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg"/>
+    </div>
+    <div class="clearfix"></div>
+    <div class="left-nav-title float-left">
+        <h1>ruan4261</h1>
+    </div>
+    <div class="clearfix"></div>
+    <!--导航列表-->
+    <ul class="left-nav-ul">
+        <li><a th:href="@{/}" th:text="#{blog.home}">主页</a></li>
+        <li>
+            <a class="left-nav-drop" href="javascript:void(0);" th:text="#{blog.archives}">归档</a>
+            <ul class="left-nav-child-menu">
+                <li><a th:href="@{/archives/timeline#section}" th:text="#{archives.timeline}">时间线</a></li>
+                <li><a th:href="@{/archives/tag#section}" th:text="#{archives.tag}">标签</a></li>
+                <li><a th:href="@{/archives/score#section}" th:text="#{archives.score}">评分</a></li>
+                <li><a th:href="@{/archives/looktimes#section}" th:text="#{archives.looktimes}">观看量</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="left-nav-drop" href="javascript:void(0);" th:text="#{blog.api}">接口</a>
+            <ul class="left-nav-child-menu">
+                <li><a href="javascript:void(0);">赛王</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="left-nav-drop" href="javascript:void(0);" th:text="#{blog.message}">留言</a>
+            <ul class="left-nav-child-menu">
+                <li><a th:href="@{/message#section}" th:text="#{message.message}">留言板</a></li>
+                <li><a th:href="@{/chat#section}" th:text="#{message.chat}">聊天室</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="left-nav-drop" href="javascript:void(0);" th:text="#{blog.about}">关于</a>
+            <ul class="left-nav-child-menu">
+                <li><a th:href="@{/about.htm#section}" th:text="#{blog.about}">关于</a></li>
+                <li><a th:href="@{/link.htm#section}" th:text="#{blog.link}">友链</a></li>
+                <li><a th:href="@{/history.htm#section}" th:text="#{blog.history}">历史</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!--公共个人信息面板 col-3-->
+<div class="blog-info-panel col-xl-3 hidden-less-1200" th:fragment="info-panel">
+    <!--露娜大人CG小图-->
+    <div class="info-cg">
+        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/sakurakouji.jpg"/>
+    </div>
+    <div class="info-text">
+        <ul class="info-text-list">
+            <p th:text="#{info.name}">称呼:</p>
+            <span th:text="${application.infoMap['Name']}"></span><br>
+            <p th:text="#{info.age}">芳龄:</p>
+            <span th:text="${application.infoMap['Age']}"></span><br>
+            <p th:text="#{info.hobby}">兴趣:</p>
+            <span th:text="${application.infoMap['Hobby']}"></span><br>
+            <p th:text="#{info.sikinatabemono}">喜欢吃:</p>
+            <span th:text="${application.infoMap['Sikinatabemono']}"></span><br>
+            <p th:text="#{info.favoritegame}">喜欢的游戏:</p>
+            <span th:text="${application.infoMap['Game']}"></span><br>
+            <p th:text="#{info.work}">工作:</p>
+            <span th:text="${application.infoMap['Work']}"></span><br>
+            <p th:text="#{info.ibasyo}">所在地:</p>
+            <span th:text="${application.infoMap['Ibasyo']}"></span><br>
+            <p th:text="#{info.ikitaibasyo}">想去:</p>
+            <span th:text="${application.infoMap['Ikitaibasyo']}"></span><br>
+        </ul>
+    </div>
+    <div style="text-align: center;font-weight: bold;font-size: 2.5rem;" th:text="#{blog.hotTags}">热门标签</div>
+    <div class="tagBall">
+        <a class="tag" th:each="tag:${application.hotTagList}" th:text="${tag.name+'('+tag.count+')'}"
+           th:href="@{'/archives/tag/'+${tag.id}+'#section'}"/>
+    </div>
+</div>
+
+<!--公共底部-->
+<footer class="blog-footer" th:fragment="body-footer">
+    <span></span>
+    <div class="footer-avow" th:text="#{blog.avow1}">本博客所有内容均为原创，转载请注明出处！</div>
+    <div class="footer-avow" th:text="#{blog.avow2}">本博客所有内容均为原创，转载请注明出处！</div>
+    <div class="footer-avow" th:text="#{blog.avow3}">本博客所有内容均为原创，转载请注明出处！</div>
+    <div class="copy-right" th:text="#{blog.allrights}">&copy;ruan4261 ALL RIGHTS RESERVED.</div>
+</footer>
+
+<!--归档头部-->
+<nav class="archives-nav" th:fragment="archives-nav">
+    <h1 th:text="#{blog.archives}" class="archives-title">归档</h1>
+    <div class="archives-nav-obj" th:class="${active=='timeline'?'archives-nav-obj over-click':'archives-nav-obj'}">
+        <span></span>
+        <a th:href="@{/archives/timeline#section}"></a>
+        <h1 th:text="#{archives.timeline}">时间线</h1>
+    </div>
+    <div class="archives-nav-obj" th:class="${active=='tag'?'archives-nav-obj over-click':'archives-nav-obj'}">
+        <span></span>
+        <a th:href="@{/archives/tag#section}"></a>
+        <h1 th:text="#{archives.tag}">标签</h1>
+    </div>
+    <div class="archives-nav-obj" th:class="${active=='score'?'archives-nav-obj over-click':'archives-nav-obj'}">
+        <span></span>
+        <a th:href="@{/archives/score#section}"></a>
+        <h1 th:text="#{archives.score}">评分</h1>
+    </div>
+    <div class="archives-nav-obj" th:class="${active=='looktimes'?'archives-nav-obj over-click':'archives-nav-obj'}">
+        <span></span>
+        <a th:href="@{/archives/looktimes#section}"></a>
+        <h1 th:text="#{archives.looktimes}">观看量</h1>
+    </div>
+    <div class="clearfix"></div>
+</nav>
+
+<!--非全局js数据保留-->
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/infoPanel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/tag3d.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/highlight.pack.js"></script>
+<script>
+    //分页
+    $('#left-page').click(function () {
+        if ($('#currentPage').val() > 1) {
+            window.location.href = "/?currentPage=" + parseInt($('#currentPage').val() - 1) + "#section";
+        }
+    });
+    $('#right-page').click(function () {
+        if ($('#currentPage').val() < $('#totalPage').val()) {
+            window.location.href = "/?currentPage=" + parseInt($('#currentPage').val() + 1) + "#section";
+        }
+    });
+</script>

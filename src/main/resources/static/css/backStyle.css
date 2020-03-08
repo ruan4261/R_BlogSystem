@@ -1,0 +1,48 @@
+/**
+ * @Ver 1.0.3200307
+ * @ruan4261.com
+ */
+section {
+    position: relative;
+    z-index: 1;
+    background: #efefef;
+}
+
+.art-form {
+    margin-top: 20rem;
+    margin-bottom: 10rem;
+    box-shadow: 0px 0px 10px #777 inset;
+    background: white;
+}
+
+@media all and (max-width: 992px) {
+    .art-from {
+        margin-top: 25rem;
+    }
+}
+
+.art-submit {
+    margin: 5rem auto;
+    font-size: 4rem;
+    display: block;
+    width: 16rem;
+    background: pink;
+}
+
+.write-art-info {
+    padding: 5rem;
+    font-weight: bold;
+    font-size: 2.4rem;
+}
+
+.yes {
+    color: dodgerblue;
+}
+
+.no {
+    color: red;
+}
+
+.article-info-control{
+    width: 100%;
+}

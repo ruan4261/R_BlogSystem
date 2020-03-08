@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ruan.blog.mapper.CommentMapper">
+
+    <!--映射-->
+    <resultMap id="commentMap" type="Comment">
+        <id property="id" column="comment_id"/>
+        <result property="score" column="comment_score"/>
+        <result property="content" column="comment_content"/>
+        <result property="time" column="comment_time"/>
+        <result property="master" column="comment_master"/>
+        <result property="parent" column="comment_parent"/>
+        <result property="target" column="comment_target"/>
+        <association property="origin" javaType="Origin">
+            <id property="id" column="origin_id"/>
+            <result property="browser" column="origin_browser"/>
+            <result property="system" column="origin_system"/>
+            <result property="ip" column="origin_ip"/>
+            <result property="address" column="origin_address"/>
+            <result property="isp" column="origin_isp"/>
+        </association>
+    </resultMap>
+
+    <!--接口-->
+    <insert id="addComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="id">
+        insert tb_comment(comment_score,comment_content,comment_time,comment_master,
+        comment_parent,comment_target,comment_origin)
+        value(#{score},#{content},#{time},#{master},#{parent},#{target},#{origin.id});
+    </insert>
+    <select id="getComment" parameterType="Comment" resultMap="commentMap">
+        select * from tb_comment
+        where comment_id=#{id}
+    </select>
+    <select id="getCommentList" resultMap="commentMap">
+        select * from tb_comment as c
+        left outer join tb_origin as o on c.comment_origin=o.origin_id
+        <trim prefix="where" prefixOverrides="and |or ">
+            <if test="comment.master!=null">
+                c.comment_master=#{comment.master}
+            </if>
+            <if test="comment.content!=null">
+                and c.comment_content like #{comment.content}
+            </if>
+            <if test="comment.parent!=null">
+                and c.comment_parent=#{comment.parent}
+            </if>
+            <if test="comment.target!=null">
+                and c.comment_target=#{comment.target}
+            </if>
+            <if test="comment.origin!=null">
+                <if test="comment.origin.browser!=null">
+                    and o.origin_browser like #{comment.origin.browser}
+                </if>
+                <if test="comment.origin.system!=null">
+                    and o.origin_system like #{comment.origin.system}
+                </if>
+                <if test="comment.origin.address!=null">
+                    and o.origin_address like #{comment.origin.address}
+                </if>
+                <if test="comment.origin.isp!=null">
+                    and o.origin_isp like #{comment.origin.isp}
+                </if>
+            </if>
+        </trim>
+        <choose>
+            <when test="order==1">
+                order by c.comment_like_times desc,c.comment_time desc
+            </when>
+            <otherwise>
+                order by c.comment_time desc
+            </otherwise>
+        </choose>
+        <if test="pageOpen!=null and pageSize!=null">
+            limit #{pageOpen},#{pageSize}
+        </if>;
+    </select>
+    <update id="updateComment" parameterType="Comment">
+        update tb_comment
+        set comment_content=#{content}
+        where comment_id=#{id};
+    </update>
+    <delete id="deleteComment" parameterType="Comment">
+        delete from tb_comment
+        where comment_id=#{id};
+    </delete>
+
+</mapper>

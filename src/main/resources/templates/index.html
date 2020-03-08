@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${application.headMap['title']}">Hello,ruan4261!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta name="description" th:content="${application.headMap['description']}">
+    <meta name="keywords" th:content="${application.headMap['keywords']}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <!--CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/tag3d.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/styles/an-old-hope.css" rel="stylesheet">
+    <!--js-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <!--popper用于支持bootstrapVer4.4.1-->
+    <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script>
+        //语言适配器，使用方法：将语言代码当做参数传进来
+        //此处源码为thymeleaf转义
+        //此处有一个用于idea中的format格式化锁，禁止排版
+        //@formatter:off
+        let langToggle = function (param) {
+            let queryString='[[${#request.queryString}]]';
+            let arr=queryString.split('&amp;');
+            for (let i=0;i<arr.length;){
+                if (arr[i].indexOf('lang=')!=-1){//自删
+                    arr.splice(i,1);
+                    continue;
+                }
+                i++;
+            }
+            queryString=arr.join("&");
+            if (queryString.trim()!=''){
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param+'&'+queryString;
+            }else {
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param;
+            }
+        }
+        //@formatter:on
+        //最后，祝thymeleaf早日成佛，别渡我这个莎比————我第一次知道了什么叫做一页代码改一天
+    </script>
+</head>
+<body>
+<header th:replace="common/common.html::body-header"></header>
+<nav th:replace="common/common.html::left-nav"></nav>
+<section class="blog-body" id="section">
+    <div class="container">
+        <div class="row">
+            <!--占位侧板-->
+            <div class="hidden-more-1200 col-lg-1 hidden-less-992"></div>
+            <!--内容限制区 col-9-->
+            <div class="blog-content-panel col-xl-9 col-lg-10 col-12">
+                <article th:each="article:${art}">
+                    <div class="art-top" th:if="${article.top==1}">
+                        <i class="fas fa-paperclip fa-4x"></i>
+                        <span>TOP</span>
+                    </div>
+                    <div class="art-show">
+                        <a th:text="${article.title}" th:href="@{'/'+${article.id}+'#section'}">标题</a>
+                        <div class="art-info">
+                            <i class="fas fa-calendar-day" style="color: royalblue"></i>
+                            <span class="art-info-time" style="color: royalblue"
+                                  th:text="${#dates.format(article.time, 'yyyy-MM-dd HH:mm:ss')}"></span>&nbsp;&nbsp;
+                            <i class="fas fa-eye" style="color: red"></i>
+                            <span class="art-info-look" style="color: red" th:text="${article.look}"></span>
+                            <br class="hidden-more-480">&nbsp;&nbsp;
+                            <i class="fas fa-star" style="color: gold"></i>
+                            <span class="art-info-score" style="color: gold" th:text="${article.score}"></span>
+                            <span style="color: gold">(Total:</span>
+                            <span style="color: gold" th:text="${article.scoreNumber}"></span>
+                            <span style="color: gold">)</span><br>
+                            <i class="fas fa-tags"></i>
+                            <span class="art-info-tags">
+                                <a th:each="artTag:${article.tagList}" th:text="${artTag.name}"
+                                   th:href="@{'/tag/'+${artTag.id}}"/>
+                            </span>
+                        </div>
+                        <p th:utext="${article.desc}">简介</p>
+                        <div class="art-read"><a th:href="@{'/'+${article.id}+'#section'}" th:text="#{art.read}"></a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <!--信息 col-3-->
+            <div th:replace="common/common.html::info-panel"></div>
+            <!--占位侧板-->
+            <div class="hidden-more-1200 col-lg-1 hidden-less-992"></div>
+        </div>
+        <!--分页器-->
+        <div class="row turn-page">
+            <div>
+                <div class="page-button" id="left-page"><i class="fas fa-angle-left fa-2x"></i></div>
+                <span th:text="#{blog.page}">页数:</span>
+                <input type="hidden" id="currentPage" th:value="${currentPage}">
+                <input type="hidden" id="totalPage" th:value="${totalPage}">
+                <div th:text="${currentPage+'/'+totalPage}"></div>
+                <div class="page-button" id="right-page"><i class="fas fa-angle-right fa-2x"></i></div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer th:replace="common/common.html::body-footer"></footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/infoPanel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/tag3d.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+    //分页
+    $('#left-page').click(function () {
+        if ($('#currentPage').val() > 1) {
+            window.location.href = "/?currentPage=" + parseInt($('#currentPage').val() - 1) + "#section";
+        }
+    });
+    $('#right-page').click(function () {
+        if ($('#currentPage').val() < $('#totalPage').val()) {
+            window.location.href = "/?currentPage=" + parseInt($('#currentPage').val() + 1) + "#section";
+        }
+    });
+</script>
+</html>

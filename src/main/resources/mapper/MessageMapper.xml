@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ruan.blog.mapper.MessageMapper">
+
+    <!--映射-->
+    <resultMap id="messageMap" type="Message">
+        <id property="id" column="message_id"/>
+        <result property="content" column="message_content"/>
+        <result property="time" column="message_time"/>
+        <result property="parent" column="message_parent"/>
+        <result property="target" column="message_target"/>
+        <association property="origin" javaType="Origin">
+            <id property="id" column="origin_id"/>
+            <result property="browser" column="origin_browser"/>
+            <result property="system" column="origin_system"/>
+            <result property="ip" column="origin_ip"/>
+            <result property="address" column="origin_address"/>
+            <result property="isp" column="origin_isp"/>
+        </association>
+    </resultMap>
+
+    <!--接口-->
+    <insert id="addMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
+        insert tb_message(message_content,message_time,message_parent,message_target,message_origin)
+        value(#{content},#{time},#{parent},#{target},#{origin.id});
+    </insert>
+    <select id="getMessage" parameterType="Message" resultMap="messageMap">
+        select * from tb_message as m
+        left outer join tb_origin as o on m.message_origin=o.origin_id
+        where m.message_id=#{id};
+    </select>
+    <select id="getMessageList" resultMap="messageMap">
+        select * from tb_message as m
+        left outer join tb_origin as o on m.message_origin=o.origin_id
+        <trim prefix="where" prefixOverrides="and |or ">
+            <if test="message.content!=null">
+                m.message_content like #{message.content}
+            </if>
+            <if test="message.parent!=null">
+                and m.message_parent=#{message.parent}
+            </if>
+            <if test="message.target!=null">
+                and m.message_target=#{message.target}
+            </if>
+            <if test="open!=null">
+                and m.message_time&gt;=#{open}
+            </if>
+            <if test="end!=null">
+                and m.message_time&lt;=#{end}
+            </if>
+            <if test="message.origin!=null">
+                <if test="message.origin.browser!=null">
+                    and o.origin_browser like #{message.origin.browser}
+                </if>
+                <if test="message.origin.system!=null">
+                    and o.origin_system like #{message.origin.system}
+                </if>
+                <if test="message.origin.address!=null">
+                    and o.origin_address like #{message.origin.address}
+                </if>
+                <if test="message.origin.isp!=null">
+                    and o.origin_isp like #{message.origin.isp}
+                </if>
+            </if>
+        </trim>
+        order by m.message_time desc
+        <if test="pageOpen!=null and pageSize!=null">
+            limit #{pageOpen},#{pageSize}
+        </if>;
+    </select>
+    <update id="updateMessage" parameterType="Message">
+        update tb_message
+        set message_content=#{content},message_time=#{time},message_parent=#{parent},
+        message_target=#{target}
+        where message_id=#{id};
+    </update>
+    <delete id="deleteMessage" parameterType="Message">
+        delete from tb_message
+        where message_id=#{id};
+    </delete>
+</mapper>
