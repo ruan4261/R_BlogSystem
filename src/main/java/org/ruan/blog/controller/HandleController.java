@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 后台显示控制器
  *
@@ -16,5 +18,10 @@ public class HandleController {
     @RequestMapping(value = "/writeArt.html", method = RequestMethod.GET)
     public Object writeArtPage() {
         return "handle/writeArt";
+    }
+
+    @RequestMapping(value = "/manager.link", method = RequestMethod.GET)
+    public Object linkManagerPage(HttpServletRequest httpServletRequest) {
+        return "handle/linkManager";
     }
 }

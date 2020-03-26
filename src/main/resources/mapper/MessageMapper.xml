@@ -8,9 +8,20 @@
     <resultMap id="messageMap" type="Message">
         <id property="id" column="message_id"/>
         <result property="content" column="message_content"/>
+        <result property="email" column="message_email"/>
         <result property="time" column="message_time"/>
         <result property="parent" column="message_parent"/>
         <result property="target" column="message_target"/>
+        <association property="link" javaType="Link">
+            <id property="id" column="link_id"/>
+            <result property="http" column="link_http"/>
+            <result property="title" column="link_title"/>
+            <result property="desc" column="link_desc"/>
+            <result property="profile" column="link_profile"/>
+            <result property="email" column="link_email"/>
+            <result property="password" column="link_password"/>
+            <result property="status" column="link_status"/>
+        </association>
         <association property="origin" javaType="Origin">
             <id property="id" column="origin_id"/>
             <result property="browser" column="origin_browser"/>
@@ -23,8 +34,8 @@
 
     <!--接口-->
     <insert id="addMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
-        insert tb_message(message_content,message_time,message_parent,message_target,message_origin)
-        value(#{content},#{time},#{parent},#{target},#{origin.id});
+        insert tb_message(message_content,message_link,message_email,message_time,message_parent,message_target,message_origin)
+        value(#{content},#{link.id},#{email},#{time},#{parent},#{target},#{origin.id});
     </insert>
     <select id="getMessage" parameterType="Message" resultMap="messageMap">
         select * from tb_message as m
@@ -34,9 +45,16 @@
     <select id="getMessageList" resultMap="messageMap">
         select * from tb_message as m
         left outer join tb_origin as o on m.message_origin=o.origin_id
+        left outer join tb_link as l on m.message_link=l.link_id
         <trim prefix="where" prefixOverrides="and |or ">
             <if test="message.content!=null">
                 m.message_content like #{message.content}
+            </if>
+            <if test="message.link!=null">
+                and m.message_link=#{link}
+            </if>
+            <if test="message.email!=null">
+                and m.message_email like #{email}
             </if>
             <if test="message.parent!=null">
                 and m.message_parent=#{message.parent}
@@ -72,8 +90,7 @@
     </select>
     <update id="updateMessage" parameterType="Message">
         update tb_message
-        set message_content=#{content},message_time=#{time},message_parent=#{parent},
-        message_target=#{target}
+        set message_content=#{content},message_time=#{time},message_parent=#{parent},message_target=#{target}
         where message_id=#{id};
     </update>
     <delete id="deleteMessage" parameterType="Message">

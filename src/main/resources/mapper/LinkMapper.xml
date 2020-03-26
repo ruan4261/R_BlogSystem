@@ -10,18 +10,25 @@
         <result property="http" column="link_http"/>
         <result property="title" column="link_title"/>
         <result property="desc" column="link_desc"/>
+        <result property="profile" column="link_profile"/>
+        <result property="email" column="link_email"/>
         <result property="password" column="link_password"/>
         <result property="status" column="link_status"/>
+        <result property="token" column="link_token"/>
     </resultMap>
 
     <!--接口-->
     <select id="linkLogin" parameterType="Link" resultMap="linkMap">
         select * from tb_link
-        where link_http=#{http} and link_password=#{password}
+        where (link_http=#{http} or link_email=#{http}) and link_password=#{password} and link_status=1;
+    </select>
+    <select id="linkHttpIsExist" parameterType="Link" resultType="java.lang.Integer">
+        select count(link_id) from tb_link
+        where link_http=#{http};
     </select>
     <insert id="addLink" parameterType="Link" useGeneratedKeys="true" keyProperty="id">
-        insert tb_link(link_http,link_title,link_desc,link_password)
-        value(#{http},#{title},#{desc},#{password});
+        insert tb_link(link_http,link_title,link_desc,link_profile,link_email,link_password,link_status,link_token)
+        value(#{http},#{title},#{desc},#{profile},#{email},#{password},#{status},#{token});
     </insert>
     <select id="getLink" parameterType="Link" resultMap="linkMap">
         select * from tb_link
@@ -36,23 +43,27 @@
             <if test="title!=null">
                 and link_title like #{title}
             </if>
-            <if test="desc!=null">
-                and link_desc like #{desc}
-            </if>
             <if test="status!=null">
                 and link_status=#{status}
+            </if>
+            <if test="status==null">
+                and link_status=1 or link_status=0
             </if>
         </trim>
         ;
     </select>
     <update id="updateLink" parameterType="Link">
         update tb_link
-        set link_http=#{http},link_title=#{title},link_desc=#{desc},link_password=#{password},link_status=#{status}
-        where link_id=#{id}
+        set link_http=#{http},link_title=#{title},link_desc=#{desc},link_profile=#{profile},
+        link_email=#{email},link_password=#{password},link_status=#{status},link_token=#{token}
+        where link_id=#{id};
     </update>
     <delete id="deleteLink" parameterType="Link">
         delete from tb_link
-        where link_id=#{id}
+        where link_id=#{id};
     </delete>
-
+    <select id="getTokenList" resultType="java.lang.String">
+        select link_token from tb_link
+        where link_status=1;
+    </select>
 </mapper>

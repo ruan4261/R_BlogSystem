@@ -8,19 +8,22 @@
     <meta name="description" th:content="${application.headMap['description']}">
     <meta name="keywords" th:content="${application.headMap['keywords']}">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg">
     <!--CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/sweetalert.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/style.css" rel="stylesheet">
     <!--后台样式-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/backStyle.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/backStyle.css" rel="stylesheet">
     <!--js-->
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/jquery1.12.4.js"></script>
     <!--popper用于支持bootstrapVer4.4.1-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/bootstrap.js"></script>
+    <!--全局弹窗插件sweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/sweetalert.min.js"></script>
     <script>
         //语言适配器，使用方法：将语言代码当做参数传进来
         //此处源码为thymeleaf转义
@@ -81,6 +84,7 @@
                         <button type="button" id="toDesc">To Desc.</button>
                         <input type="hidden" name="desc" id="desc">
                         <hr>
+                        <input type="hidden" name="contents" id="contents">
                     </div>
                 </div>
                 <textarea id="editor" name="content"></textarea>
@@ -91,10 +95,10 @@
 </section>
 <footer th:replace="common/common.html::body-footer"></footer>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/ckeditor/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/ckeditor/ckeditor.js"></script>
 <script>
-    CKEDITOR.replace('editor');
+    CKEDITOR.replace('editor', {id: 'frame'});
     $("input:radio[name='isDB']").change(function () {
         if ($("input:radio[name='isDB']:checked").val() == 1) {
             $(".article-info-control").css("display", "inline-block");
@@ -107,25 +111,77 @@
     $('#toDesc').click(function () {
         let desc = CKEDITOR.instances.editor.getData();
         if (desc.length > 3000) {
-            alert("简介文本内容过载！")
+            swal({
+                icon: "warning",
+                title: "警告",
+                text: '简介内容过载。',
+                button: "确认"
+            });
         } else {
             $('#desc').val(desc);
-            alert("保存成功！by ruan4261.");
+            swal({
+                icon: "success",
+                title: "成功",
+                text: '简介保存成功。',
+                button: "确认"
+            });
         }
     });
     $('#art-submit').click(function () {
-        if (confirm('请先确认文章标题标签等信息无误！\n确认提交？')) {
-            if ($('input[name="isDB"]')[0].checked == false) {
-                $('#art-form').submit();
-                return;
+        swal({
+            icon: "warning",
+            title: "警告",
+            text: '请先确认文章标题标签等信息无误！确认提交？',
+            buttons: {
+                cancel: {
+                    text: "取消",
+                    visible: true,
+                    value: false
+                },
+                confirm: {
+                    text: "继续提交",
+                    visible: true,
+                    value: true
+                }
             }
-            if ($('input[name="title"]').val().trim() != "" &&
-                $('input[name="tags"]').val().trim() != "") {
-                $('#art-form').submit();
-            } else {
-                alert('表单信息不完整，请核查！');
+        }).then(function (value) {
+            if (value) {
+                if ($('input[name="isDB"]')[0].checked == false) {
+                    $('#art-form').submit();
+                    return;
+                }
+                if ($('input[name="title"]').val().trim() != "" &&
+                    $('input[name="tags"]').val().trim() != "") {
+                    let data = CKEDITOR.instances.editor.getData();
+                    let contentsJson = '{';
+                    let flag = 0;
+                    for (let i = 0; i < data.split('name="part"').length - 1; i++) {
+                        //获取当前目标的indexOf(name)
+                        let nameIndex = data.indexOf('name="part"', flag);
+                        //获取当前目标的字符串的起点及终点
+                        let thisFirstIndex = data.lastIndexOf('id="', nameIndex) + 4;
+                        let thisLastIndex = data.lastIndexOf('"', nameIndex);
+                        //获取目标内容
+                        let content = data.substring(thisFirstIndex, thisLastIndex);
+                        contentsJson = contentsJson + '"' + (i + 1) + '":"' + content + '"';
+                        //如果不是最后一次循环，则添加逗号
+                        if (i < data.split('name="part"').length - 2) contentsJson = contentsJson + ",";
+                        //更新flag值
+                        flag = nameIndex + 10;
+                    }
+                    contentsJson = contentsJson + '}';
+                    $('#contents').val(contentsJson);
+                    $('#art-form').submit();
+                } else {
+                    swal({
+                        icon: "warning",
+                        title: "警告",
+                        text: '表单信息不完整。',
+                        button: "确认"
+                    });
+                }
             }
-        }
+        });
     });
 </script>
 </html>

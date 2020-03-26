@@ -9,10 +9,22 @@
         <id property="id" column="comment_id"/>
         <result property="score" column="comment_score"/>
         <result property="content" column="comment_content"/>
+        <result property="email" column="comment_email"/>
         <result property="time" column="comment_time"/>
         <result property="master" column="comment_master"/>
         <result property="parent" column="comment_parent"/>
         <result property="target" column="comment_target"/>
+        <result property="likeTimes" column="comment_like_times"/>
+        <association property="link" javaType="Link">
+            <id property="id" column="link_id"/>
+            <result property="http" column="link_http"/>
+            <result property="title" column="link_title"/>
+            <result property="desc" column="link_desc"/>
+            <result property="profile" column="link_profile"/>
+            <result property="email" column="link_email"/>
+            <result property="password" column="link_password"/>
+            <result property="status" column="link_status"/>
+        </association>
         <association property="origin" javaType="Origin">
             <id property="id" column="origin_id"/>
             <result property="browser" column="origin_browser"/>
@@ -25,20 +37,26 @@
 
     <!--接口-->
     <insert id="addComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="id">
-        insert tb_comment(comment_score,comment_content,comment_time,comment_master,
+        insert tb_comment(comment_score,comment_content,comment_link,comment_email,comment_time,comment_master,
         comment_parent,comment_target,comment_origin)
-        value(#{score},#{content},#{time},#{master},#{parent},#{target},#{origin.id});
+        value(#{score},#{content},#{link.id},#{email},#{time},#{master},#{parent},#{target},#{origin.id});
     </insert>
     <select id="getComment" parameterType="Comment" resultMap="commentMap">
-        select * from tb_comment
-        where comment_id=#{id}
+        select * from tb_comment as c
+        left outer join tb_origin as o on c.comment_origin=o.origin_id
+        left outer join tb_link as l on c.comment_link=l.link_id
+        where c.comment_id=#{id}
     </select>
     <select id="getCommentList" resultMap="commentMap">
         select * from tb_comment as c
         left outer join tb_origin as o on c.comment_origin=o.origin_id
+        left outer join tb_link as l on c.comment_link=l.link_id
         <trim prefix="where" prefixOverrides="and |or ">
             <if test="comment.master!=null">
                 c.comment_master=#{comment.master}
+            </if>
+            <if test="subset==null">
+                and c.comment_parent is null
             </if>
             <if test="comment.content!=null">
                 and c.comment_content like #{comment.content}
@@ -76,9 +94,35 @@
             limit #{pageOpen},#{pageSize}
         </if>;
     </select>
+    <select id="getCommentListOnlyOnce" resultMap="commentMap">
+        select * from (select (@rownum := @rownum + 1) rn,comment_id as comm from tb_comment,(SELECT @rownum := 0) AS rn
+        where comment_master=#{comment.master} and comment_parent is null
+        <choose>
+            <when test="order==1">
+                order by comment_like_times desc,comment_time desc
+            </when>
+            <otherwise>
+                order by comment_time desc
+            </otherwise>
+        </choose>
+        limit #{pageOpen},#{pageSize}) as r
+        left outer join tb_comment as c on c.comment_id=r.comm or c.comment_parent=r.comm
+        left outer join tb_origin as o on o.origin_id=c.comment_origin
+        left outer join tb_link as l on l.link_id=c.comment_link
+        where c.comment_id = r.comm or c.comment_parent = r.comm
+        order by r.rn,c.comment_time;
+    </select>
+    <select id="getCommentCount" parameterType="Article" resultType="java.lang.Integer">
+        select count(*) from tb_comment
+        where comment_master=#{id};
+    </select>
+    <select id="getCommentCountForPage" parameterType="Article" resultType="java.lang.Integer">
+        select count(*) from tb_comment
+        where comment_master=#{id} and comment_parent is null;
+    </select>
     <update id="updateComment" parameterType="Comment">
         update tb_comment
-        set comment_content=#{content}
+        set comment_content=#{content},comment_like_times=#{likeTimes}
         where comment_id=#{id};
     </update>
     <delete id="deleteComment" parameterType="Comment">

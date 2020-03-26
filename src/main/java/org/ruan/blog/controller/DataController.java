@@ -3,10 +3,11 @@ package org.ruan.blog.controller;
 import com.alibaba.fastjson.JSONObject;
 import org.ruan.blog.component.*;
 import org.ruan.blog.pojo.Article;
-import org.ruan.blog.pojo.Origin;
-import org.ruan.blog.pojo.Tag;
 import org.ruan.blog.service.BlogService;
 import org.ruan.blog.service.DataService;
+import org.ruan.blog.util.BlogAlgorithmHandler;
+import org.ruan.blog.util.ImageUploadHandler;
+import org.ruan.blog.util.LocalIOStreamHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,15 +22,18 @@ import java.util.*;
 /**
  * 后台数据管理器
  */
-@Controller
+@Controller("dataController")
 @RequestMapping(value = "/lain", method = RequestMethod.POST)
 public class DataController {
 
     @Autowired
-    private BlogService blogService;
+    private DataService dataService;
 
     @Autowired
-    private DataService dataService;
+    private BlogContextHandler blogContextHandler;
+
+    @Autowired
+    private HttpRequestHandler httpRequestHandler;
 
     /**
      * 提交了一篇文章
@@ -56,19 +60,19 @@ public class DataController {
                 article.setTitle(httpServletRequest.getParameter("title"));
                 article.setDesc(httpServletRequest.getParameter("desc"));
                 article.setTags(httpServletRequest.getParameter("tags"));
-                BlogAlgorithmHandler.articleTagsToTagList(article);
+                article.articleTagsToTagList();
                 article.setTop(Integer.parseInt(httpServletRequest.getParameter("top")));
                 //去获取request中的origin
-                article.setOrigin(BlogAlgorithmHandler.findHttpOrigin(httpServletRequest, blogService, dataService));
+                article.setOrigin(httpRequestHandler.findHttpOrigin(httpServletRequest));
                 //传进service执行事务
-                dataService.addArticleLevelOne(article, jsonContent.toJSONString(), isRSS);
+                dataService.addArticleLevelOne(article, jsonContent.toJSONString(), httpServletRequest.getParameter("contents"), isRSS);
 
                 //刷新application域==>因为可能有标签更新
-                BlogContextHandler.updateApp(httpServletRequest.getServletContext());
+                blogContextHandler.updateApp();
             } else if (isDB == 0) {
                 //仅生成文件
                 String jsonFileName = httpServletRequest.getParameter("jsonFileName");
-                BlogContextHandler.writeFile("C:/data/Blog/articleJson/" + jsonFileName + ".json", jsonContent.toJSONString());
+                LocalIOStreamHandler.writeFile("C:/data/Blog/articleJson/" + jsonFileName + ".json", jsonContent.toJSONString());
             }
         } catch (Exception ex) {
             BlogAlgorithmHandler.setErrorMessage(httpServletRequest, 500, ex.getMessage());
@@ -79,16 +83,16 @@ public class DataController {
     /**
      * ckEditor图片上传地址
      *
-     * @param files
+     * @param file
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/upload/image", method = RequestMethod.POST)
-    public Object uploadImage(@RequestParam("upload") MultipartFile[] files) {
+    public Object uploadImage(@RequestParam("upload") MultipartFile file) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            Map<MultipartFile, String> fileNames = ImageUploadHandler.uploadImage(files, new HashMap<MultipartFile, String>(), "C:/data/Blog/articleImages/");
-            String fileName = fileNames.get(files[0]);
+            String fileName = ImageUploadHandler.uploadImage(file, "C:/data/Blog/articleImages/");
+            if (fileName == null) throw new RuntimeException();
             map.put("uploaded", 1);
             map.put("url", "https://ruan4261.com/resource/image/" + fileName);
         } catch (Exception ex) {
@@ -101,5 +105,6 @@ public class DataController {
         jsonObject.putAll(map);
         return jsonObject;
     }
+
 
 }

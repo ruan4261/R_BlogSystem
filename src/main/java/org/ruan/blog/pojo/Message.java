@@ -13,6 +13,10 @@ public class Message {
     private Integer id;
     //内容
     private String content;
+    //友链账号（非友链则为null）
+    private Link link;
+    //回复的邮箱
+    private String email;
     //发表时间
     private Date time;
     //父级留言(无父级留言此项为空)
@@ -36,6 +40,22 @@ public class Message {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Link getLink() {
+        return link;
+    }
+
+    public void setLink(Link link) {
+        this.link = link;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Date getTime() {

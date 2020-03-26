@@ -15,10 +15,16 @@ public class Link {
     private String title;
     //网站描述or站长签名
     private String desc;
+    //友链显示图片
+    private String profile;
+    //友链邮箱
+    private String email;
     //友链账号密码
     private String password;
     //友链状态
     private Integer status;
+    //密钥
+    private String token;
 
     public Integer getId() {
         return id;
@@ -52,6 +58,22 @@ public class Link {
         this.desc = desc;
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -66,5 +88,13 @@ public class Link {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

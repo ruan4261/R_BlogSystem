@@ -8,18 +8,21 @@
     <meta name="description" th:content="${application.headMap['description']}">
     <meta name="keywords" th:content="${application.headMap['keywords']}">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg">
     <!--CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/tag3d.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/sweetalert.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/tag3d.css" rel="stylesheet">
     <!--全局声明Package-->
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/jquery1.12.4.js"></script>
     <!--popper用于支持bootstrapVer4.4.1-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/bootstrap.js"></script>
+    <!--全局弹窗插件sweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/sweetalert.min.js"></script>
     <script>
         //语言适配器，使用方法：将语言代码当做参数传进来
         //此处源码为thymeleaf转义
@@ -57,15 +60,13 @@
                 <div class="link-body">
                     <h1 class="about-title" th:text="#{blog.link}">友链</h1>
                     <div class="row">
-                        <div class="col-1 hidden-less-768"></div>
-                        <div class="link-obj col-12 col-md-5">
-                            <a href="javascript:void(0)" target="_blank"></a>
-                            <img class="float-left" th:src="@{/image/pro.jpg}"/>
-                            <h1>友链模板</h1>
+                        <div th:each="link:${linkList}" class="link-obj col-12 col-md-5">
+                            <a th:href="@{'https://'+${link.http}}" target="_blank"></a>
+                            <img class="float-left" th:src="@{'https://'+${link.profile}}"/>
+                            <h1 th:text="${link.title}">友链模板</h1>
                             <hr>
-                            <p>这里是友链站点的描述，友链站长的签名......</p>
+                            <p th:text="${link.desc}">这里是友链站点的描述，友链站长的签名......</p>
                         </div>
-                        <div class="col-1 hidden-less-768"></div>
                     </div>
                     <hr>
                     <div class="row link-desc">
@@ -73,11 +74,225 @@
                         <p th:text="${application.infoMap['LinkDesc']}"></p>
                         <h1 class="col-12" th:text="#{link.apply}">友链申请</h1>
                         <p th:text="${application.infoMap['LinkApply']}"></p>
+                        <h1 class="col-12" th:text="#{link.myinfo}">我的信息</h1>
+                        <p th:text="${application.infoMap['MyInfo']}"></p>
                     </div>
-                    <div class="link-form">
-                        <div>友链申请还没上线，项目功能进度如下：</div>
-                        <div>三类归档功能(Ver1.0.3版本将上线)-->文章评论功能-->友链功能-->留言功能</div>
-                    </div>
+                    <form th:if="${session.friendLink==null}" class="link-form">
+                        <h1 class="link-form-title" th:text="#{link.signin}">友链登录</h1>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="login-http">
+                                    https://
+                                </label>
+                            </div>
+                            <input id="login-http" type="text" class="form-control" placeholder="友链域名/邮箱" autocomplete="off">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="login-password">
+                                    <i class="fas fa-lock"></i>
+                                </label>
+                            </div>
+                            <input id="login-password" type="password" class="form-control" placeholder="友链密码" autocomplete="off">
+                        </div>
+                        <button id="login-submit" type="button" class="btn btn-outline-primary link-form-button">登录</button>
+                        <h1 class="link-form-title" th:text="#{link.signup}">友链申请表单</h1>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="title">
+                                    <i class="fas fa-user-alt"></i>
+                                </label>
+                            </div>
+                            <input id="title" type="text" class="form-control" placeholder="友链名" autocomplete="off">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="desc">
+                                    <i class="fas fa-quote-left"></i>
+                                </label>
+                            </div>
+                            <input id="desc" type="text" class="form-control" placeholder="友链简介" autocomplete="off">
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="desc">
+                                    <i class="fas fa-quote-right"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="http" style="font-weight: bold">https://</label>
+                            </div>
+                            <input id="http" type="text" class="form-control" placeholder="友链域名" autocomplete="off">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="profile">
+                                    <i class="fas fa-image"></i>&nbsp;https://
+                                </label>
+                            </div>
+                            <input id="profile" type="text" class="form-control"
+                                   placeholder="您的头像,公网URL(推荐CDN),私人站点请勿设置防盗链。" autocomplete="off">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="password">
+                                    <i class="fas fa-lock"></i>
+                                </label>
+                            </div>
+                            <input id="password" type="password" class="form-control" placeholder="站内密码"
+                                   autocomplete="off">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="re-password">
+                                    <i class="fas fa-lock"></i>
+                                </label>
+                            </div>
+                            <input id="re-password" type="password" class="form-control" placeholder="再次确认密码"
+                                   autocomplete="off">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="email">
+                                    <i class="fas fa-envelope"></i>
+                                </label>
+                            </div>
+                            <input id="email" type="text" class="form-control" placeholder="留下您的邮箱，这非常重要"
+                                   autocomplete="off">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="verifyCode">
+                                    <i class="fas fa-user-shield"></i>
+                                </label>
+                            </div>
+                            <input id="verifyCode" type="text" class="form-control" placeholder="邮箱中的验证码(必填)"
+                                   autocomplete="off">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button"
+                                        onclick="sendEmailVerifyCode($('#email').val(),this)">发送
+                                </button>
+                            </div>
+                        </div>
+                        <button type="reset" class="btn btn-outline-warning link-form-button">重置</button>
+                        <button id="add-submit" type="button" class="btn btn-outline-primary link-form-button">提交</button>
+                    </form>
+                    <form th:if="${session.friendLink!=null}" class="link-form">
+                        <h1 class="link-form-title">您的友链信息</h1>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text">https://</label>
+                            </div>
+                            <input type="text" class="form-control" disabled="disabled"
+                                   th:value="${session.friendLink.http}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text">
+                                    <i class="fas fa-key"></i>
+                                </label>
+                            </div>
+                            <input type="text" class="form-control" disabled="disabled"
+                                   th:value="${session.friendLink.token}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </label>
+                            </div>
+                            <input type="text" class="form-control" disabled="disabled" value="忘记密码请至页面最下方修改。">
+                        </div>
+                        <h1 class="link-form-title">友链信息修改</h1>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="u-title">
+                                    <i class="fas fa-user-alt"></i>
+                                </label>
+                            </div>
+                            <input id="u-title" type="text" class="form-control" th:value="${session.friendLink.title}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="u-desc">
+                                    <i class="fas fa-quote-left"></i>
+                                </label>
+                            </div>
+                            <input id="u-desc" type="text" class="form-control" th:value="${session.friendLink.desc}">
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="u-desc">
+                                    <i class="fas fa-quote-right"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="u-profile">
+                                    <i class="fas fa-image"></i>&nbsp;https://
+                                </label>
+                            </div>
+                            <input id="u-profile" type="text" class="form-control"
+                                   th:value="${session.friendLink.profile}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="u-email">
+                                    <i class="fas fa-envelope"></i>
+                                </label>
+                            </div>
+                            <input id="u-email" type="text" class="form-control" th:value="${session.friendLink.email}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="u-verifyCode">
+                                    <i class="fas fa-user-shield"></i>
+                                </label>
+                            </div>
+                            <input id="u-verifyCode" type="text" class="form-control" placeholder="旧邮箱验证码，此项必填">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button"
+                                        onclick="sendEmailVerifyCodeByLink(this)">发送
+                                </button>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="n-verifyCode">
+                                    <i class="fas fa-user-shield"></i>
+                                </label>
+                            </div>
+                            <input id="n-verifyCode" type="text" class="form-control" placeholder="新邮箱验证码，如不更换无需填写">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button"
+                                        onclick="sendEmailVerifyCode($('#u-email').val(),this)">发送
+                                </button>
+                            </div>
+                        </div>
+                        <button id="info-submit" type="button" class="btn btn-outline-warning link-form-button">修改</button>
+                        <h1 class="link-form-title">友链密码修改</h1>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="u-password">
+                                    <i class="fas fa-lock"></i>
+                                </label>
+                            </div>
+                            <input id="u-password" type="password" class="form-control" placeholder="新的密码">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="up-verifyCode">
+                                    <i class="fas fa-user-shield"></i>
+                                </label>
+                            </div>
+                            <input id="up-verifyCode" type="text" class="form-control" placeholder="友链邮箱中的验证码">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button"
+                                        onclick="sendEmailVerifyCodeByLink(this)">发送
+                                </button>
+                            </div>
+                        </div>
+                        <button id="pwd-submit" type="button" class="btn btn-outline-warning link-form-button">修改</button>
+                    </form>
                 </div>
             </div>
             <!--信息 col-3-->
@@ -88,8 +303,9 @@
 </section>
 <footer th:replace="common/common.html::body-footer"></footer>
 </body>
-<!--每个View有独立的js模块，非common的去中心化模式-->
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/tag3d.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/infoPanel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/tag3d.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/infoPanel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/linkHandler.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/emailHandler.js"></script>
 </html>

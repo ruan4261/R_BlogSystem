@@ -8,19 +8,19 @@
     <meta name="description" th:content="${application.headMap['description']}">
     <meta name="keywords" th:content="${application.headMap['keywords']}">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg">
     <!--CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/tag3d.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/styles/an-old-hope.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/tag3d.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/styles/an-old-hope.css" rel="stylesheet">
     <!--js-->
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/jquery1.12.4.js"></script>
     <!--popper用于支持bootstrapVer4.4.1-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/bootstrap.js"></script>
     <script>
         //语言适配器，使用方法：将语言代码当做参数传进来
         //此处源码为thymeleaf转义
@@ -79,7 +79,7 @@
                             <i class="fas fa-tags"></i>
                             <span class="art-info-tags">
                                 <a th:each="artTag:${article.tagList}" th:text="${artTag.name}"
-                                   th:href="@{'/tag/'+${artTag.id}}"/>
+                                   th:href="@{'/archives/tag/'+${artTag.id}+'#section'}"/>
                             </span>
                         </div>
                         <p th:utext="${article.desc}">简介</p>
@@ -97,7 +97,7 @@
         <div class="row turn-page">
             <div>
                 <div class="page-button" id="left-page"><i class="fas fa-angle-left fa-2x"></i></div>
-                <span th:text="#{blog.page}">页数:</span>
+                <span style="word-break: keep-all" th:text="#{blog.page}">页数:</span>
                 <input type="hidden" id="currentPage" th:value="${currentPage}">
                 <input type="hidden" id="totalPage" th:value="${totalPage}">
                 <div th:text="${currentPage+'/'+totalPage}"></div>
@@ -108,21 +108,23 @@
 </section>
 <footer th:replace="common/common.html::body-footer"></footer>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/infoPanel.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/tag3d.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/infoPanel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/tag3d.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/intense.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/highlight.pack.js"></script>
 <script>
+    hljs.initHighlightingOnLoad();
+    Intense(document.querySelectorAll('.art-show img'));
     //分页
     $('#left-page').click(function () {
         if ($('#currentPage').val() > 1) {
-            window.location.href = "/?currentPage=" + parseInt($('#currentPage').val() - 1) + "#section";
+            window.location.href = "/?currentPage=" + (parseInt($('#currentPage').val()) - 1) + "#section";
         }
     });
     $('#right-page').click(function () {
         if ($('#currentPage').val() < $('#totalPage').val()) {
-            window.location.href = "/?currentPage=" + parseInt($('#currentPage').val() + 1) + "#section";
+            window.location.href = "/?currentPage=" + (parseInt($('#currentPage').val()) + 1) + "#section";
         }
     });
 </script>

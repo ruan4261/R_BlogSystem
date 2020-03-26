@@ -1,6 +1,6 @@
 package org.ruan.blog.interceptor;
 
-import org.ruan.blog.component.BlogAlgorithmHandler;
+import org.ruan.blog.util.BlogAlgorithmHandler;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ public class ErrorPageInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler) throws
             Exception {
         if (errorCodeList.contains(httpServletResponse.getStatus())) {
-            BlogAlgorithmHandler.setErrorMessage(httpServletRequest, httpServletResponse.getStatus(), "您的路径或参数非法！");
+            BlogAlgorithmHandler.setErrorMessage(httpServletRequest, httpServletResponse.getStatus(), "未定义错误！");
             httpServletResponse.setStatus(200);
             httpServletRequest.getRequestDispatcher("error").forward(httpServletRequest, httpServletResponse);
             return false;

@@ -32,20 +32,37 @@ $(document).on('click', function (e) {
     noLangTouch(e);
 });
 
+let upFlag = true;
+let downFlag = true;
+
 function pageUp() {
-    window.scrollBy(0, -30);
-    scrolldelay = setTimeout('pageUp()', 5);
+    let scrolldelay;
+    if (upFlag) {
+        downFlag = false;
+        window.scrollBy(0, -50);
+        scrolldelay = setTimeout('pageUp()', 5);
+    }
     let sTop = document.documentElement.scrollTop + document.body.scrollTop;
-    if (sTop == 0) clearTimeout(scrolldelay);
+    if (sTop == 0) {
+        clearTimeout(scrolldelay);
+        downFlag = true;
+    }
 }
 
 function pageDown() {
-    window.scrollBy(0, 30);
-    scrolldelay = setTimeout('pageDown()', 5);
+    let scrolldelay;
+    if (downFlag) {
+        upFlag = false;
+        window.scrollBy(0, 50);
+        scrolldelay = setTimeout('pageDown()', 5);
+    }
     let scrollTop = $(window).scrollTop();
     let scrollHeight = $(document).height();
     let windowHeight = $(window).height();
-    if (scrollTop + windowHeight >= scrollHeight) clearTimeout(scrolldelay);
+    if (scrollTop + windowHeight >= scrollHeight) {
+        clearTimeout(scrolldelay);
+        upFlag = true;
+    }
 }
 
 function noLangTouch(e) {

@@ -1,7 +1,7 @@
 package org.ruan.blog.controller;
 
-import org.ruan.blog.component.BlogAlgorithmHandler;
-import org.ruan.blog.component.Page;
+import org.ruan.blog.util.BlogAlgorithmHandler;
+import org.ruan.blog.util.Page;
 import org.ruan.blog.pojo.Article;
 import org.ruan.blog.pojo.Tag;
 import org.ruan.blog.service.BlogService;
@@ -10,11 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -28,6 +26,16 @@ public class ArchivesController {
 
     @Autowired
     private BlogService blogService;
+
+    /**
+     * 自动跳转到时间线归档
+     *
+     * @return
+     */
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public Object defaultPath() {
+        return "redirect:/archives/timeline";
+    }
 
     /**
      * 时间线接口
@@ -95,6 +103,9 @@ public class ArchivesController {
         article.setTags(id.toString());
         List<Article> articleList = blogService.getArticleList(article, null, null, null);
         httpServletRequest.setAttribute("artList", articleList);
+        Tag tag = new Tag();
+        tag.setId(id);
+        httpServletRequest.setAttribute("tag", blogService.getTag(tag));
         return "index/tag";
     }
 
@@ -107,7 +118,7 @@ public class ArchivesController {
      */
     @RequestMapping(value = "/score", method = RequestMethod.GET)
     public Object score(HttpServletRequest httpServletRequest) {
-        Page page = BlogAlgorithmHandler.pageHandler(httpServletRequest, 10, blogService.getArticleCount(new Article()));
+        Page page = BlogAlgorithmHandler.pageHandler(httpServletRequest, 7, blogService.getArticleCount(new Article()));
         if (page != null)
             httpServletRequest.setAttribute("artList", blogService.getArticleList(null, page.getCurrentPageNo(), page.getPageSize(), 2));
         return "index/score";
@@ -122,7 +133,7 @@ public class ArchivesController {
      */
     @RequestMapping(value = "/looktimes", method = RequestMethod.GET)
     public Object looktimes(HttpServletRequest httpServletRequest) {
-        Page page = BlogAlgorithmHandler.pageHandler(httpServletRequest, 10, blogService.getArticleCount(new Article()));
+        Page page = BlogAlgorithmHandler.pageHandler(httpServletRequest, 7, blogService.getArticleCount(new Article()));
         if (page != null)
             httpServletRequest.setAttribute("artList", blogService.getArticleList(null, page.getCurrentPageNo(), page.getPageSize(), 3));
         return "index/looktimes";

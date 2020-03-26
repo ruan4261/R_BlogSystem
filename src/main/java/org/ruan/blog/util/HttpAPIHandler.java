@@ -1,4 +1,4 @@
-package org.ruan.blog.component;
+package org.ruan.blog.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.net.URL;
  */
 public class HttpAPIHandler {
 
-	此类接口指向国内IP聚合数据的接口
+    //聚合数据ip查询接口ruan4261个人账号使用key
     private static String apiKey = "";
 
     /**
@@ -29,7 +29,7 @@ public class HttpAPIHandler {
         StringBuilder result = new StringBuilder();
         try {
             //创建远程url连接对象
-            java.net.URL url = new URL("http://apis.juhe.cn/ip/ipNew?ip=" + ip + "&key=" + apiKey);
+            URL url = new URL("http://apis.juhe.cn/ip/ipNew?ip=" + ip + "&key=" + apiKey);
             //通过远程url连接对象打开一个连接，强转成HTTPURLConnection类
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");

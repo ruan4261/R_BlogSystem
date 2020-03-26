@@ -8,18 +8,18 @@
     <meta name="description" th:content="${application.headMap['description']}">
     <meta name="keywords" th:content="${application.headMap['keywords']}">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg">
     <!--CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/tag3d.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/tag3d.css" rel="stylesheet">
     <!--全局声明Package-->
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/jquery1.12.4.js"></script>
     <!--popper用于支持bootstrapVer4.4.1-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/bootstrap.js"></script>
     <script>
         //语言适配器，使用方法：将语言代码当做参数传进来
         //此处源码为thymeleaf转义
@@ -58,18 +58,39 @@
             <div class="blog-content-panel col-xl-9 col-lg-10 col-12">
                 <div class="archives-pack-list">
                     <div th:replace="common/common.html::archives-nav(active='tag')"></div>
-                    <div th:if="${tagList==null && artList==null}" style="font-size: 3rem">Data Is Null.<br>当前页面无数据。
+                    <div th:if="${(tagList==null || tagList.size()<1) && (artList==null || artList.size()<1)}"
+                         style="font-size: 3rem">Data Is Null.<br>当前页面无数据。
                     </div>
-                    <div th:if="${tagList!=null}">
+                    <div th:if="${tagList!=null && tagList.size()>0}">
                         <h1 class="tag-count-title" th:text="'共检索到'+${tagList.size()+'个标签'}"></h1>
                         <div th:each="tag:${tagList}" class="tag-line">
-                            <a th:href="@{'/archives/tag/'+${tag.id}}"></a>
+                            <a th:href="@{'/archives/tag/'+${tag.id}+'#section'}"></a>
                             <h1 th:text="${tag.name}"></h1>&nbsp;&nbsp;&nbsp;<br class="hidden-more-576">
                             <span th:text="${tag.count}+'篇文章关于此标签'"></span>
                         </div>
                     </div>
-                    <div th:if="${artList!=null}">
-
+                    <div th:if="${artList!=null && artList.size()>0}">
+                        <h1 class="tag-count-title" th:text="${artList.size()+'篇关于<'+tag.name+'>的文章'}"></h1>
+                        <div th:each="art:${artList}" class="tag-line">
+                            <a th:href="@{'/'+${art.id}+'#section'}"></a>
+                            <h1 th:text="${art.title}"></h1>
+                            <hr style="margin: 0;border-bottom: gold 1px solid">
+                            <span class="art-info-tags">
+                                <a th:each="artTag:${art.tagList}" th:text="${artTag.name}"
+                                   th:href="@{'/archives/tag/'+${artTag.id}+'#section'}"></a>
+                            </span>
+                            <br>
+                            <span th:text="#{blog.pubdate}"></span>
+                            <span th:text="${#dates.format(art.time, 'yyyy-MM-dd HH:mm:ss')}"></span>&nbsp;
+                            <br class="hidden-more-576">
+                            <i class="fas fa-eye" style="color: red"></i>
+                            <span style="color: red" th:text="${art.look}"></span>&nbsp;
+                            <i class="fas fa-star" style="color: gold"></i>
+                            <span style="color: gold" th:text="${art.score}"></span>
+                            <span style="color: gold">(Total:</span>
+                            <span style="color: gold" th:text="${art.scoreNumber}"></span>
+                            <span style="color: gold">)</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,7 +103,7 @@
 </section>
 <footer th:replace="common/common.html::body-footer"></footer>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/tag3d.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/infoPanel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/tag3d.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/infoPanel.js"></script>
 </html>

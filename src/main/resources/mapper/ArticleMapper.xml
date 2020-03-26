@@ -107,10 +107,10 @@
                 order by a.article_top desc,a.article_time desc
             </when>
             <when test="order==2">
-                order by a.article_top desc,a.article_score desc
+                order by a.article_score desc,a.article_score_number desc
             </when>
             <when test="order==3">
-                order by a.article_top desc,a.article_look desc
+                order by a.article_look desc
             </when>
         </choose>
         <if test="pageOpen!=null and pageSize!=null">
@@ -122,12 +122,18 @@
         article_top=#{top},article_origin=#{origin.id},article_look=#{look},article_score=#{score},article_score_number=#{scoreNumber}
         where article_id=#{id};
     </update>
+    <update id="flushArticleScore" parameterType="Article">
+        update tb_article
+        set article_score=(select avg(comment_score) from tb_comment where comment_master=#{id} and comment_score is not null),
+        article_score_number=(select count(comment_id) from tb_comment where comment_master=#{id} and comment_score is not null)
+        where article_id=#{id};
+    </update>
     <delete id="deleteArticle" parameterType="Article">
         delete from tb_article
         where article_id=#{id};
     </delete>
     <select id="getArticleListByTimeline" resultMap="articleMap">
-        SELECT article_id,article_title,article_time,article_tags,article_score,article_score_number FROM tb_article
+        SELECT article_id,article_title,article_look,article_time,article_tags,article_score,article_score_number FROM tb_article
         <if test="open!=null and end!=null">
             where article_time&gt;=#{open} and article_time&lt;=#{end}
         </if>

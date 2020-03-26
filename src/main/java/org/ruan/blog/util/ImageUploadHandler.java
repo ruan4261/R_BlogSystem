@@ -1,4 +1,4 @@
-package org.ruan.blog.component;
+package org.ruan.blog.util;
 
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
@@ -13,7 +13,7 @@ import java.util.UUID;
 public class ImageUploadHandler {
 
     /**
-     * 对字节数组字符串进行Base64解码并生成图片
+     * base64文件解码
      *
      * @param base64ImageStr
      * @param filePath
@@ -81,13 +81,15 @@ public class ImageUploadHandler {
     /**
      * 图片上传
      *
+     * @param multipartFile
      * @param path
      * @return
      */
-    public static boolean uploadImage(MultipartFile multipartFile, String path) {
+    public static String uploadImage(MultipartFile multipartFile, String path) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
+            String fileName = UUID.randomUUID().toString().replace("-", "") + ".jpg";
 
-            File target = new File(path);
+            File target = new File(path, fileName);
             if (!target.exists()) {
                 target.mkdirs();
             }
@@ -96,9 +98,10 @@ public class ImageUploadHandler {
                 multipartFile.transferTo(target);
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
+                throw new RuntimeException("图片传输失败");
             }
+            return fileName;
         }
-        return true;
+        return null;
     }
 }

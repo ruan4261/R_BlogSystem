@@ -1,5 +1,5 @@
 /**
- * @Ver 1.0.3200307
+ * @Ver 1.0.42003131
  * @ruan4261.com
  */
 @font-face {
@@ -113,7 +113,7 @@ html, body {
 
 .active {
     display: block !important;
-    z-index: 999;
+    z-index: 200;
 }
 
 blockquote {
@@ -130,11 +130,38 @@ blockquote * {
     text-align: left;
 }
 
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
+.gold {
+    color: gold !important;
+}
+
+.red {
+    color: red !important;
+}
+
+.blue {
+    color: blue !important;
+}
+
+.deepskyblue {
+    color: deepskyblue !important;
+}
+
+.skyblue {
+    color: skyblue !important;
+}
+
+.limegreen {
+    color: limegreen !important;
+}
+
+.pink {
+    color: pink !important;
+}
+
+.deeppink {
+    color: deeppink !important;
+}
+
+.hotpink {
+    color: hotpink !important;
 }

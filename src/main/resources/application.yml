@@ -1,7 +1,7 @@
 spring:
   datasource:
-    username: 
-    password: 
+    username: root
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ruan4261_blog?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
     type: com.alibaba.druid.pool.DruidDataSource
@@ -12,7 +12,7 @@ spring:
     # 最大连接个数
     maxActive: 20
     # 配置获取连接等待超时的时间，单位毫秒，缺省启用公平锁，并发效率会有所下降
-    maxWait: 5000
+    maxWait: 10000
     # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
     timeBetweenEvictionRunsMillis: 60000
     # 配置一个连接在池中最小生存的时间，单位是毫秒
@@ -40,13 +40,32 @@ spring:
     # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
+  mail:
+    host: smtp.exmail.qq.com
+    username: ruan4261@ruan4261.com
+    password:
+    properties.mail.smtp.port: 465
+    from: ruan4261@ruan4261.com
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+
 mybatis:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/*.xml
 
 server:
   port: 443
+  servlet:
+    session:
+      timeout: 360m
   ssl:
     key-store: C:\www.ruan4261.com.jks
-    key-store-password: 
+    key-store-password:
     enabled: true
+
+ruan:
+  blog:
+    info: C:/data/Blog/blog.info.json
+    history: C:/data/Blog/blog.history.json

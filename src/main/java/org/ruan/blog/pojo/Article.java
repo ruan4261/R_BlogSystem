@@ -1,6 +1,9 @@
 package org.ruan.blog.pojo;
 
+import org.ruan.blog.mapper.TagMapper;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -131,5 +134,40 @@ public class Article {
 
     public void setOrigin(Origin origin) {
         this.origin = origin;
+    }
+
+    /**
+     * 不确定数据库是否含有标签的情况下组合list的方式
+     */
+    public void articleTagsToTagList() {
+        String[] tagArr = this.getTags().split("\\*");
+        //排除有标签为空的情况并转换为list
+        List<Tag> tagList = new ArrayList<Tag>();
+        for (int i = 0; i < tagArr.length; i++) {
+            if (!tagArr[i].trim().equals("")) {
+                Tag tag = new Tag();
+                tag.setName(tagArr[i]);
+                tagList.add(tag);
+            }
+        }
+        this.setTagList(tagList);
+    }
+
+    /**
+     * 将article内的tags转化为taglist
+     * 前提为数据库必须文章的所有标签
+     *
+     * @param tagMapper
+     */
+    public void articleTagsToTagList(TagMapper tagMapper) {
+        List<Tag> artTagList = new ArrayList<Tag>();
+        String[] tagArr = this.getTags().split("\\*");
+        for (String tag : tagArr) {
+            if (tag.trim().equals("")) continue;
+            Tag tagTemp = new Tag();
+            tagTemp.setId(Integer.parseInt(tag));
+            artTagList.add(tagMapper.getTag(tagTemp));
+        }
+        this.setTagList(artTagList);
     }
 }

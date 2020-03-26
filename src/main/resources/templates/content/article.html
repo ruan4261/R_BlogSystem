@@ -8,19 +8,22 @@
     <meta name="description" th:content="${application.headMap['description']}">
     <meta name="keywords" th:content="${application.headMap['keywords']}">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg">
     <!--CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/tag3d.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/styles/an-old-hope.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/sweetalert.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/tag3d.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/styles/an-old-hope.css" rel="stylesheet">
     <!--js-->
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/jquery1.12.4.js"></script>
     <!--popper用于支持bootstrapVer4.4.1-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/bootstrap.js"></script>
+    <!--全局弹窗插件sweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/sweetalert.min.js"></script>
     <script>
         //语言适配器，使用方法：将语言代码当做参数传进来
         //此处源码为thymeleaf转义
@@ -73,7 +76,7 @@
                             <i class="fas fa-tags"></i>
                             <span class="art-info-tags">
                                 <a th:each="artTag:${article.tagList}" th:text="${artTag.name}"
-                                   th:href="@{'/tag/'+${artTag.id}}"/>
+                                   th:href="@{'/archives/tag/'+${artTag.id}}"/>
                             </span>
                             <br>
                             <i class="fas fa-compass fa-lg"></i>
@@ -87,17 +90,248 @@
                         <div class="article-content" th:utext="${content}"></div>
                     </div>
                 </article>
+                <div class="comment-body" id="comment">
+                    <div class="comment-info">
+                        <h1 th:text="${commentCount+'条评论,当前第'+currentPage+'页'}"></h1>
+                        <span class="comment-order-toggle">
+                            <a th:class="${order==1?'on':''}"
+                               th:href="@{${'/'+article.id}+'?order=1&amp;currentPage='+${currentPage}+'#comment'}">按点赞排序</a>
+                            <a th:class="${order==2?'on':''}"
+                               th:href="@{${'/'+article.id}+'?order=2&amp;currentPage='+${currentPage}+'#comment'}">按时间排序</a>
+                        </span>
+                        <span class="comment-page-top hidden-less-576">
+                            <h1 th:text="${'共'+totalPage+'页,跳转至'}"></h1>
+                            <input id="article-id" type="hidden" th:value="${article.id}">
+                            <input id="currentPage" type="text" autocomplete="off">
+                            <input id="order" th:value="${order}" type="hidden">
+                            <h1>页</h1>
+                            <button type="button" onclick="page(1)">GO</button>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <form name="comment-form" class="write-comment">
+                        <div class="write-comment-profile hidden-less-576">
+                            <img th:if="${session.friendLink==null}" th:src="@{/image/akari.jpg}">
+                            <img th:if="${session.friendLink!=null}"
+                                 th:src="@{'https://'+${session.friendLink.profile}}">
+                        </div>
+                        <div class="comment-verify">
+                            <input id="score" name="score" type="hidden">
+                            <span class="score-star">本文章评分:
+                                <i id="score-1" class="fas fa-star" onclick="scoreHandler(1)"></i>
+                                <i id="score-2" class="fas fa-star" onclick="scoreHandler(2)"></i>
+                                <i id="score-3" class="fas fa-star" onclick="scoreHandler(3)"></i>
+                                <i id="score-4" class="fas fa-star" onclick="scoreHandler(4)"></i>
+                                <i id="score-5" class="fas fa-star" onclick="scoreHandler(5)"></i>
+                            </span>
+                            <br>
+                            <span class="comment-login-box">
+                                <label for="login-http">账:</label>
+                                <input id="login-http" name="login-http" class="form-control" type="text"
+                                       autocomplete="off">
+                                <br class="hidden-more-768">
+                                <label for="login-password">密:</label>
+                                <input id="login-password" name="login-password" class="form-control" type="password"
+                                       autocomplete="off">
+                                <button type="button" class="btn btn-success"
+                                        onclick="login($('#login-http').val(),$('#login-password').val())">登录</button>
+                                <button type="button" class="btn btn-info" onclick="loginBoxToggle(2)">切换</button>
+                            </span>
+                            <span class="comment-login-status show">
+                                <span>您的状态:</span>
+                                <span th:style="${session.friendLink==null?'color: #eb8b00':'color: limegreen'}"
+                                      th:text="${session.friendLink==null?'游客':'已登录'}"></span>
+                                <span>您的昵称:</span>
+                                <span th:style="${session.friendLink==null?'color: #eb8b00':'color: limegreen'}"
+                                      th:text="${session.friendLink==null?'游客':session.friendLink.title}"></span>
+                                <button th:if="${session.friendLink==null}" type="button" class="btn btn-info"
+                                        onclick="loginBoxToggle(1)">切换</button>
+                                <button th:if="${session.friendLink!=null}" type="button" class="btn btn-warning"
+                                        onclick="logout()">登出</button>
+                            </span>
+                            <br>
+                            <label for="email">使用邮箱:</label>
+                            <input id="email" type="email" class="form-control"
+                                   th:value="${session.friendLink==null?'':session.friendLink.email}">
+                            <br class="hidden-more-768">
+                            <label for="verifyCode">验证码:</label>
+                            <input class="verify-code form-control" id="verifyCode" name="verifyCode"
+                                   type="text" autocomplete="off">
+                            <button type="button" class="btn btn-success"
+                                    onclick="sendEmailVerifyCode($('#email').val(),this)">发送
+                            </button>
+                            <br>
+                            <span>默认邮箱:</span>
+                            <span th:each="cookie:${#httpServletRequest.getCookies()}"
+                                  th:if="${cookie.getName().equals('always-email')}"
+                                  th:style="${session.friendLink==null && (cookie.getValue()==null || cookie.getValue().equals('')) ?'color: red':'color: limegreen'}"
+                                  th:text="${session.friendLink==null?(cookie.getValue()==null || cookie.getValue().equals('')?'不存在':cookie.getValue()):session.friendLink.email}"></span>
+                            <button type="button" class="btn btn-success" onclick="sendCommentHelper(1)">发表评论</button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <textarea id="content" name="content"
+                                  placeholder="无需翻墙或登录即可发布评论，请填写邮箱并验证，您的评论被回复时您的邮箱会收到提醒；站内账号请至友链页面注册（即成为本站友链）。大牛别看了，来写一下评论吧QAQ"></textarea>
+                        <input type="hidden" id="parent" name="parent">
+                        <input type="hidden" id="target" name="target">
+                    </form>
+                    <div class="comment-board">
+                        <div th:each="comm:${comment}" class="comment-block">
+                            <a th:href="${comm.link==null?'javascript:void(0);':'https://'+comm.link.http}"
+                               class="comment-profile">
+                                <img th:src="${comm.link==null?'/image/akari.jpg':'https://'+comm.link.profile}">
+                            </a>
+                            <div class="comment-section">
+                                <h1>
+                                    <a th:href="${comm.link==null?'javascript:void(0);':'https://'+comm.link.http}"
+                                       th:style="${'color:'+(comm.link==null?'#6d757a':'#fb7299')}"
+                                       th:text="${comm.link==null?'(游客)来自'+comm.origin.address:comm.link.title}"></a>
+                                </h1>
+                                <br class="hidden-more-480">
+                                <span th:if="${comm.score!=null}">
+                                    <i th:each="i:${#numbers.sequence(1,5)}"
+                                       th:style="${comm.score>=i?'color:gold;':''}" class="fas fa-star"></i>
+                                </span>
+                                <p class="comment-content" th:utext="${comm.content}"></p>
+                                <span th:text="${#dates.format(comm.time,'yyyy-MM-dd HH:mm:ss')}"></span>&nbsp;
+                                <span class="comment-like-show-only">
+                                    <span th:each="cookie:${#httpServletRequest.getCookies()}"
+                                          th:if="${cookie.getName().equals('like-comment')}">
+                                        <i th:each="ckV:${#strings.arraySplit(cookie.getValue(),'*')}"
+                                           th:if="${ckV.equals(comm.id.toString())}"
+                                           class="fas fa-heartbeat comment-like-btn deeppink"></i>
+                                    </span>
+                                    <i th:onclick="'clickLike('+${comm.id}+')'"
+                                       class="fas fa-heartbeat comment-like-btn"></i>
+                                </span>
+                                <span th:text="${comm.likeTimes}"></span>&nbsp;
+                                <a href="javascript:void(0);" class="reply-btn"
+                                   th:onclick="'openReplyBox(this,'+${comm.id}+','+${comm.id}+')'">回复</a>
+                                <div class="comment-kid-pack" th:each="kid:${comm.subset}">
+                                    <a th:href="${kid.link==null?'javascript:void(0);':'https://'+kid.link.http}"
+                                       class="comment-profile-small">
+                                        <img th:src="${kid.link==null?'/image/akari.jpg':'https://'+kid.link.profile}">
+                                    </a>
+                                    <div class="comment-kid">
+                                        <h1>
+                                            <a th:href="${kid.link==null?'javascript:void(0);':'https://'+kid.link.http}"
+                                               th:style="${'color:'+(kid.link==null?'#6d757a':'#fb7299')}"
+                                               th:text="${kid.link==null?'(游客)来自'+kid.origin.address:kid.link.title}"></a>
+                                        </h1>
+                                        <br class="hidden-more-768">
+                                        回复
+                                        <span class="deepskyblue" th:if="${kid.target==kid.parent}"
+                                              th:text="${'楼主'}"></span>
+                                        <span class="deepskyblue" th:if="${kid.target!=kid.parent}"
+                                              th:each="kid2:${comm.subset}">
+                                            <span th:if="${kid.target==kid2.id}"
+                                                  th:text="${kid2.link==null?'(游客)'+kid2.origin.address+'('+#dates.format(kid2.time,'YYMMdd HH:mm:ss)'):kid2.link.title}"></span>
+                                        </span>
+                                        <p class="comment-content" th:utext="${kid.content}"></p>
+                                        <span th:text="${#dates.format(kid.time,'yyyy-MM-dd HH:mm:ss')}"></span>&nbsp;
+                                        <span class="comment-like-show-only">
+                                            <span th:each="cookie:${#httpServletRequest.getCookies()}"
+                                                  th:if="${cookie.getName().equals('like-comment')}">
+                                                <i th:each="ckV:${#strings.arraySplit(cookie.getValue(),'*')}"
+                                                   th:if="${ckV.equals(kid.id.toString())}"
+                                                   class="fas fa-heartbeat comment-like-btn deeppink"></i>
+                                            </span>
+                                            <i th:onclick="'clickLike('+${kid.id}+')'"
+                                               class="fas fa-heartbeat comment-like-btn"></i>
+                                        </span>
+                                        <span th:text="${kid.likeTimes}"></span>&nbsp;
+                                        <a href="javascript:void(0);" class="reply-btn"
+                                           th:onclick="'openReplyBox(this,'+${comm.id}+','+${kid.id}+')'">回复</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-page-bottom">
+                        <a onclick="pageTurn(-1)"><i class="fas fa-angle-left fa-lg"></i></a>
+                        <span>
+                            <input type="text" id="currentPage2" th:value="${currentPage}">
+                            <button type="button" onclick="page(2)">GO</button>
+                            <input id="total-page" type="text" th:value="${totalPage}" readonly="readonly">
+                            <input id="current-page" type="hidden" th:value="${currentPage}">
+                        </span>
+                        <a onclick="pageTurn(1)"><i class="fas fa-angle-right fa-lg"></i></a>
+                    </div>
+                </div>
             </div>
             <!--信息 col-3-->
             <div th:replace="common/common.html::info-panel"></div>
         </div>
     </div>
 </section>
+<div id="reply-box-spare">
+    <form name="comment-form" class="write-comment">
+        <div class="comment-verify reply">
+            <span>您的昵称:</span>
+            <span th:style="${session.friendLink==null?'color: #eb8b00':'color: limegreen'}"
+                  th:text="${session.friendLink==null?'游客':session.friendLink.title}"></span>
+            <span>(评论顶部操作账号)</span>
+            <br>
+            <label for="email-reply">使用邮箱:</label>
+            <input id="email-reply" type="email" class="form-control"
+                   th:value="${session.friendLink==null?'':session.friendLink.email}">
+            <br class="hidden-more-768">
+            <label for="verifyCode-reply">验证码:</label>
+            <input class="verify-code form-control" id="verifyCode-reply" name="verifyCode"
+                   type="text" autocomplete="off">
+            <button type="button" class="btn btn-success" onclick="sendEmailVerifyCode($('#email-reply').val(),this)">
+                发送
+            </button>
+            <br>
+            <span>默认邮箱:</span>
+            <span th:each="cookie:${#httpServletRequest.getCookies()}"
+                  th:if="${cookie.getName().equals('always-email')}"
+                  th:style="${session.friendLink==null && (cookie.getValue()==null || cookie.getValue().equals('')) ?'color: red':'color: limegreen'}"
+                  th:text="${session.friendLink==null?(cookie.getValue()==null || cookie.getValue().equals('')?'不存在':cookie.getValue()):session.friendLink.email}"></span>
+            <button type="button" class="btn btn-success" onclick="sendCommentHelper(2)">发表回复</button>
+        </div>
+        <div class="clearfix"></div>
+        <textarea id="content-reply" name="content"
+                  placeholder="无需翻墙或登录即可发布评论，请填写邮箱并验证，您的评论被回复时您的邮箱会收到提醒。"></textarea>
+    </form>
+</div>
 <footer th:replace="common/common.html::body-footer"></footer>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/infoPanel.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/tag3d.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/infoPanel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/tag3d.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/intense.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/commentHandler.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/emailHandler.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/highlight.pack.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+    Intense(document.querySelectorAll('.art-show img'));
+
+    function page(param) {
+        if (param == 1) {
+            window.location.href = '/' + $('#article-id').val() + '?order=' + $('#order').val() + '&currentPage=' + $('#currentPage').val() + '#comment';
+        } else if (param == 2) {
+            window.location.href = '/' + $('#article-id').val() + '?order=' + $('#order').val() + '&currentPage=' + $('#currentPage2').val() + '#comment';
+        }
+    }
+
+    function pageTurn(cal) {
+        if ((parseInt($('#current-page').val()) + cal) < 1) return;
+        else if ((parseInt($('#current-page').val()) + cal) > $('#total-page').val()) return;
+        window.location.href = '/' + $('#article-id').val() + '?order=' + $('#order').val() + '&currentPage=' + (parseInt($('#current-page').val()) + cal) + '#comment';
+    }
+</script>
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
 </html>

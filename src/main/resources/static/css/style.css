@@ -1,5 +1,5 @@
 /**
- * @Ver 1.0.3200307
+ * @Ver 1.0.5200326
  * @ruan4261.com
  */
 /*header part*/
@@ -325,7 +325,6 @@ header {
 
 .my-title {
     position: absolute;
-    word-break: keep-all;
     width: 100%;
     top: 50%;
     left: 50%;
@@ -609,6 +608,46 @@ header {
     }
 }
 
+.blog-panel-top {
+    list-style: none;
+    margin: 2rem 0 0;
+}
+
+.blog-panel-top li {
+    float: left;
+    margin-left: 3rem;
+}
+
+.blog-panel-top a {
+    font-size: 2.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.blog-panel-top a:hover {
+    text-shadow: 0px 0px 2px #777;
+}
+
+.panel-fade {
+    display: none;
+}
+
+.contents-list {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.contents-list a {
+    color: #555;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.contents-list a:hover {
+    color: darksalmon;
+    text-decoration: none;
+}
+
 .info-cg {
     margin: 2rem auto;
     box-shadow: 0 0 5px #777;
@@ -667,7 +706,7 @@ header {
     width: 100%;
     background: white;
     box-shadow: 5px 5px 5px #6c757da6;
-    border-radius: 5rem;
+    border-radius: 6rem 0;
     margin-bottom: 5rem;
 }
 
@@ -706,7 +745,6 @@ header {
     margin: 0 auto;
     padding: 3rem 0 12rem;
     text-align: center;
-    overflow: hidden;
 }
 
 @media all and (max-width: 576px) {
@@ -715,12 +753,17 @@ header {
     }
 }
 
-.art-show p, .art-show span, .art-show strong, .art-show a, .art-show s, .art-show em {
+.art-show p, .art-show span, .art-show strong, .art-show a, .art-show s, .art-show em , .art-show li, .art-show u{
     font-family: auto;
+}
+
+.art-show li{
+    text-align: left;
 }
 
 .art-show img {
     max-width: 100%;
+    cursor: url("../image/plus_cursor.png") 25 25, auto;
 }
 
 .art-show > a {
@@ -788,12 +831,17 @@ header {
     }
 }
 
+.art-info-tags {
+    position: relative;
+    z-index: 10;
+}
+
 .art-info-tags a {
     display: inline-block;
     background: #333;
     color: white;
     padding: 0.2rem 1rem;
-    margin: 1rem 1rem 1rem 0;
+    margin: 0 0.5rem 0.5rem 0;
     border-radius: 2rem;
     box-shadow: 3px 3px 3px #777;
 }
@@ -843,6 +891,10 @@ header {
     padding-bottom: 3rem;
 }
 
+.turn-page.indiv {
+    padding: 2rem 0 0;
+}
+
 @media all and (max-width: 576px) {
     .turn-page {
         font-size: 20px;
@@ -868,6 +920,7 @@ header {
     .page-button {
         width: 45px;
         height: 45px;
+        margin: 0 1rem;
     }
 }
 
@@ -939,11 +992,17 @@ header {
     border: 1px pink solid;
     background: #FFC0CB11;
     border-radius: 1.5rem;
-    margin: 0;
+    margin: 0 0 2rem 4rem;
     padding: 1rem;
     box-shadow: 2px 2px 2px pink;
     position: relative;
     overflow: hidden;
+}
+
+@media all and (max-width: 768px) {
+    .link-obj {
+        margin: 1rem 0;
+    }
 }
 
 .link-obj:before {
@@ -968,6 +1027,7 @@ header {
     border-radius: 100%;
     width: 10rem;
     height: 10rem;
+    margin-right: 0.5rem;
     z-index: 2;
     position: relative;
     transform: rotate(0);
@@ -1120,6 +1180,7 @@ header {
     position: relative;
     margin: -2px;
     width: 25%;
+    word-break: keep-all;
 }
 
 .archives-nav-obj.over-click {
@@ -1197,6 +1258,12 @@ header {
     color: darksalmon;
 }
 
+@media all and (max-width: 576px) {
+    .timeline-month-list > a {
+        font-size: 2.5rem;
+    }
+}
+
 .timeline-count {
 }
 
@@ -1232,7 +1299,7 @@ header {
 }
 
 .timeline-art {
-
+    margin-bottom: 2rem;
 }
 
 .timeline-art span {
@@ -1262,8 +1329,17 @@ header {
 }
 
 @media all and (max-width: 480px) {
+    .timeline-art span {
+        font-size: 1.2rem;
+    }
+
+    .timeline-art-title {
+        font-size: 2rem;
+    }
+
     .timeline-year-title {
         font-size: 2.8rem;
+        margin-top: 1.5rem;
     }
 }
 
@@ -1279,8 +1355,13 @@ header {
     font-weight: bold;
 }
 
+@media all and (max-width: 480px) {
+    .tag-count-title {
+        font-size: 1.6rem;
+    }
+}
+
 .tag-line {
-    line-height: 3rem;
     background: #25292Af7;
     border-bottom: #81FEF6 3px solid;
     border-image: linear-gradient(to right, #333, #81FEF6, #333) 10 10;
@@ -1313,4 +1394,601 @@ header {
 .tag-line > span {
     font-size: 1.6rem;
     color: #FDCD42;
+}
+
+@media all and (max-width: 768px) {
+    .tag-line {
+        padding: 0.6rem 2.5rem;
+    }
+
+    .tag-line > h1 {
+        font-size: 2.4rem;
+    }
+
+    .tag-line > span {
+        font-size: 1.2rem;
+    }
+}
+
+@media all and (max-width: 480px) {
+    .tag-line {
+        padding: 0.5rem 1.5rem;
+    }
+
+    .tag-line > h1 {
+        font-size: 1.8rem;
+    }
+}
+
+.tag-line .art-info-tags > a {
+    background: gold;
+    color: black;
+    font-weight: bold;
+}
+
+/*score*/
+
+.score-line {
+    margin-bottom: 1rem;
+    border: 1px #aaa solid;
+    box-shadow: 3px 3px 5px #ccc;
+    border-radius: 3rem;
+    position: relative;
+    overflow: hidden;
+    min-width: 250px;
+    font-size: 1.4rem;
+    word-break: keep-all;
+}
+
+.score-line:before, .score-line:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -180%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 219, 91, 0.76);
+    -webkit-transform: skew(-45deg, 0);
+    transform: skew(-45deg, 0);
+    -webkit-transition: all .5s;
+    transition: all .5s
+}
+
+.score-line:after {
+    left: 180%;
+}
+
+.score-line:hover:before {
+    left: -50%;
+}
+
+.score-line:hover:after {
+    left: 50%;
+}
+
+.score-line:hover .score-head, .score-line:hover .score-head > h1 {
+    color: black;
+}
+
+.score-line > a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+.score-head {
+    float: left;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    color: gold;
+    position: relative;
+    z-index: 2;
+    width: 20%;
+    word-break: keep-all;
+    text-align: center;
+}
+
+.score-head > h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    color: gold;
+    word-break: keep-all;
+}
+
+.score-body {
+    float: left;
+    position: relative;
+    z-index: 2;
+    width: 80%;
+    font-weight: bold;
+}
+
+.score-body > h1 {
+    font-weight: bold;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    margin: 0;
+}
+
+@media all and (max-width: 768px) {
+    .score-head {
+        width: 25%;
+    }
+
+    .score-body {
+        width: 75%;
+    }
+}
+
+@media all and (max-width: 480px) {
+    .score-line {
+        font-size: 1.2rem;
+    }
+
+    .score-head {
+        font-size: 1.4rem;
+        padding: 1rem 0.5rem;
+    }
+
+    .score-head > h1 {
+        font-size: 2.8rem;
+    }
+
+    .score-body > h1 {
+        font-size: 1.8rem;
+    }
+}
+
+@media all and (max-width: 380px) {
+    .score-line {
+        left: -18%;
+    }
+}
+
+/*looktimes*/
+
+.looktimes-line {
+    position: relative;
+    padding: 1rem 2rem;
+    font-weight: bold;
+    font-size: 1.5rem;
+    box-shadow: 0px 0px 5px #bbb;
+    border: 1px #ddd solid;
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.looktimes-line > p {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.looktimes-line:hover {
+    box-shadow: 0px 0px 5px #777 inset;
+    background: #f5f5f5;
+}
+
+.looktimes-line .color-score {
+    color: gold;
+}
+
+.looktimes-line:hover .color-score {
+    color: black;
+}
+
+.looktimes-line > a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+.looktimes-line > h1 {
+    font-size: 2.6rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+@media all and (max-width: 480px) {
+    .looktimes-line {
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .looktimes-line > h1 {
+        font-size: 2rem;
+    }
+
+    .looktimes-line > p {
+        font-size: 1.4rem;
+    }
+}
+
+/*comment*/
+
+.comment-body {
+    background: white;
+    padding: 2rem 2rem 2rem;
+    box-shadow: 5px 5px 5px #6c757da6;
+    border-radius: 0 6rem;
+    margin-bottom: 5rem;
+}
+
+.comment-info {
+    border-bottom: 2px #bbb solid;
+}
+
+.comment-info h1 {
+    font-weight: bold;
+    font-size: 2.4rem;
+}
+
+.comment-order-toggle {
+    margin-top: 0.5rem;
+    float: left;
+}
+
+.comment-order-toggle a {
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+@media all and (max-width: 480px) {
+    .comment-info h1 {
+        font-size: 2rem;
+    }
+
+    .comment-order-toggle a {
+        font-size: 1.6rem;
+    }
+}
+
+.comment-order-toggle a:hover {
+    text-decoration: none;
+    color: darksalmon;
+}
+
+.comment-order-toggle .on {
+    color: darksalmon;
+}
+
+.comment-page-top {
+    float: right;
+}
+
+.comment-page-top h1 {
+    font-size: 1.8rem;
+    display: inline-block;
+}
+
+.comment-page-top input {
+    width: 30px;
+    font-size: 1.8rem;
+    background: #ddd;
+    border: none;
+    outline-color: salmon;
+}
+
+.comment-page-top button {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: salmon;
+    border: none;
+    background: none;
+}
+
+.comment-page-top button:hover {
+    text-shadow: 1px 0px 3px darksalmon;
+}
+
+.write-comment {
+    padding-top: 1rem;
+}
+
+.write-comment-profile {
+    float: left;
+    width: 10%;
+    height: 0;
+    padding-bottom: 10%;
+    border-radius: 100%;
+    border: 1px #bbb dashed;
+    overflow: hidden;
+    margin: 1rem 5% 0 5%;
+}
+
+@media all and (max-width: 768px) {
+    .write-comment-profile {
+        width: 16%;
+        padding-bottom: 16%;
+        margin: 1rem 2% 0 2%;
+    }
+}
+
+.write-comment-profile img {
+    width: 100%;
+}
+
+.comment-verify {
+    float: left;
+    font-size: 2rem;
+    font-weight: bold;
+    width: 80%;
+}
+
+.comment-verify input {
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    max-width: 160px;
+}
+
+.comment-verify input.verify-code {
+    width: 60px;
+}
+
+.comment-verify button {
+    display: inline-block;
+    font-size: 1.8rem;
+    font-weight: bold;
+    border-radius: 1rem;
+    padding: 0.2rem 0.5rem;
+}
+
+.write-comment textarea {
+    width: 90%;
+    height: 10rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin: 1rem 5%;
+}
+
+@media all and (max-width: 576px) {
+    .comment-verify {
+        width: 100%;
+        font-size: 1.4rem;
+    }
+
+    .comment-verify input {
+        font-size: 1rem;
+    }
+
+    .comment-verify button {
+        font-size: 1.2rem;
+    }
+
+    .write-comment textarea {
+        font-size: 1.2rem;
+        width: 100%;
+        margin: 1rem 0;
+    }
+}
+
+.score-star i {
+    cursor: pointer;
+}
+
+.comment-board {
+
+}
+
+.comment-block {
+    border-bottom: 1px solid #bbb;
+    padding: 2rem 0;
+}
+
+.comment-profile, .comment-profile-small {
+    display: block;
+    float: left;
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.comment-profile-small {
+    width: 50px;
+    height: 50px;
+}
+
+.comment-profile img, .comment-profile-small img {
+    width: 100%;
+}
+
+.comment-section, .comment-kid {
+    margin-left: 90px;
+    min-height: 80px;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.comment-kid-pack {
+    position: relative;
+    left: -30px;
+    top: 10px;
+}
+
+.comment-kid {
+    margin-left: 60px;
+    min-height: 50px;
+}
+
+.comment-section h1, .comment-kid h1 {
+    display: inline-block;
+}
+
+.comment-section h1 > a, .comment-kid h1 > a {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.comment-section h1 > a:hover, .comment-kid h1 > a:hover {
+    text-decoration: none;
+}
+
+.reply-btn {
+    word-break: keep-all;
+    color: #555;
+}
+
+.reply-btn:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.comment-like-btn {
+    cursor: pointer;
+}
+
+.comment-like-btn:hover {
+    color: deeppink;
+}
+
+@media all and (max-width: 576px) {
+    .comment-profile {
+        top: 10px;
+        width: 35px;
+        height: 35px;
+    }
+
+    .comment-profile-small {
+        top: 10px;
+        width: 25px;
+        height: 25px;
+    }
+
+    .comment-section, .comment-kid {
+        font-size: 1.2rem;
+        margin-left: 40px;
+    }
+
+    .comment-kid {
+        margin-left: 30px;
+    }
+
+    .comment-kid-pack {
+        left: -20px;
+    }
+
+    .comment-section h1 > a, .comment-kid h1 > a {
+        font-size: 1.4rem;
+    }
+}
+
+.comment-like-show-only {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    top: 2px;
+}
+
+.comment-content {
+}
+
+.comment-page-bottom {
+    margin: 1rem auto;
+    font-size: 2rem;
+    width: -moz-max-content;
+    width: max-content;
+}
+
+.comment-page-bottom a {
+    display: inline-block;
+    color: white;
+    background: #aaa;
+    border-radius: 100%;
+    overflow: hidden;
+    height: 30px;
+    width: 30px;
+    padding: 2px 0 0 8px;
+    position: relative;
+    top: 10px;
+    cursor: pointer;
+}
+
+.comment-page-bottom span {
+}
+
+.comment-page-bottom input, .comment-page-bottom button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    outline: none;
+    text-align: center;
+}
+
+.comment-page-bottom button {
+    padding: 5px;
+    box-shadow: 0px 0px 3px #333;
+}
+
+.comment-page-bottom button:hover {
+    box-shadow: 0px 0px 5px #333 inset;
+}
+
+.comment-page-bottom input {
+    width: 30px;
+}
+
+.comment-login-box, .comment-login-status {
+    display: none;
+}
+
+.comment-login-box.show, .comment-login-status.show {
+    display: inline-block;
+}
+
+/*用于复制的reply-box块*/
+
+#reply-box-spare {
+    display: none !important;
+}
+
+.comment-verify.reply {
+    width: 100%;
+}
+
+#reply-box textarea {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+/*link*/
+
+.link-form {
+    text-align: center;
+}
+
+.link-form * {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.link-form-title{
+    font-size: 2.5rem;
+    margin-top: 1rem;
+}
+
+.link-form-button {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 1rem;
 }

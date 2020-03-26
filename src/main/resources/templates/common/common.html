@@ -9,21 +9,24 @@
     <meta name="description" th:content="${application.headMap['description']}">
     <meta name="keywords" th:content="${application.headMap['keywords']}">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg">
     <!--CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/fontawesome/css/all.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/reset.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/tag3d.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/styles/an-old-hope.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/fontawesome/css/all.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/sweetalert.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/reset.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/tag3d.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/styles/an-old-hope.css" rel="stylesheet">
     <!--后台样式-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/css/backStyle.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/backStyle.css" rel="stylesheet">
     <!--全局声明Package-->
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/jquery1.12.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/jquery1.12.4.js"></script>
     <!--popper用于支持bootstrapVer4.4.1-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/bootstrap.js"></script>
+    <!--全局弹窗插件sweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/sweetalert.min.js"></script>
     <script>
         //语言适配器，使用方法：将语言代码当做参数传进来
         //此处源码为thymeleaf转义
@@ -134,7 +137,7 @@
     <!--最顶部的信息面板-->
     <div style="position: relative;">
         <div class="maru-atama">
-            <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg"/>
+            <img src="https://ruan4261.com/pub/pro.jpg"/>
         </div>
         <div class="info-shade">
             <!--顶部文字-->
@@ -145,7 +148,7 @@
             <div class="my-link">
                 <ul class="my-link-list">
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/qq.png"/>
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/qq.png"/>
                         <a href="tencent://message/?uin=2598055586&Site=&Menu=yes" target="_blank"></a>
                     </li>
                     <li class="my-link-list-li">
@@ -162,20 +165,23 @@
                     </li>
                     <br class="hidden-more-992"/>
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/email.svg"
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/email.svg"
                              title="ruan4261@foxmail.com"/>
                         <a href="mailto:ruan4261@foxmail.com" target="_blank"></a>
                     </li>
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/twitter.png" title="Twitter@ruan4261"/>
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/twitter.png"
+                             title="Twitter@ruan4261"/>
                         <a href="https://twitter.com/ruan4261" target="_blank"></a>
                     </li>
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/bilibili.png" title="BiliBili@林时雨"/>
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/bilibili.png"
+                             title="BiliBili@林时雨"/>
                         <a href="https://space.bilibili.com/23934967" target="_blank"></a>
                     </li>
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/wangyiyun.png" title="网易云音乐@ruan4261"/>
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/wangyiyun.png"
+                             title="网易云音乐@ruan4261"/>
                         <a href="https://music.163.com/#/user/home?id=395832685" target="_blank"></a>
                     </li>
                     <div class="clearfix"></div>
@@ -195,7 +201,7 @@
     </div>
     <!--头像-->
     <div class="left-nav-image">
-        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/pro.jpg"/>
+        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg"/>
     </div>
     <div class="clearfix"></div>
     <div class="left-nav-title float-left">
@@ -240,30 +246,55 @@
 
 <!--公共个人信息面板 col-3-->
 <div class="blog-info-panel col-xl-3 hidden-less-1200" th:fragment="info-panel">
-    <!--露娜大人CG小图-->
-    <div class="info-cg">
-        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/image/sakurakouji.jpg"/>
+    <!--顶部切换面板-->
+    <ul th:if="${contents!=null}" class="blog-panel-top">
+        <li><a id="open-contents" th:text="#{panel.contents}">目录</a></li>
+        <li><a id="open-me" th:text="#{panel.me}">我</a></li>
+        <div class="clearfix"></div>
+    </ul>
+    <!--目录-->
+    <div class="panel-fade" id="panel-contents">
+        <div th:if="${contents==null || contents.size()<1}">
+            <h1 style="color: coral;font-weight: bold">当前文章不存在目录</h1>
+        </div>
+        <div th:if="${contents!=null && contents.size()>0}">
+            <ul class="contents-list">
+                <li><a href="#section">回到标题</a></li>
+                <li th:each="map:${contents}">
+                    <a th:href="@{'#'+${map.value}}" th:text="${map.key+'.'+map.value}"></a>
+                </li>
+                <li><a href="#comment">评论区</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="info-text">
-        <ul class="info-text-list">
-            <p th:text="#{info.name}">称呼:</p>
-            <span th:text="${application.infoMap['Name']}"></span><br>
-            <p th:text="#{info.age}">芳龄:</p>
-            <span th:text="${application.infoMap['Age']}"></span><br>
-            <p th:text="#{info.hobby}">兴趣:</p>
-            <span th:text="${application.infoMap['Hobby']}"></span><br>
-            <p th:text="#{info.sikinatabemono}">喜欢吃:</p>
-            <span th:text="${application.infoMap['Sikinatabemono']}"></span><br>
-            <p th:text="#{info.favoritegame}">喜欢的游戏:</p>
-            <span th:text="${application.infoMap['Game']}"></span><br>
-            <p th:text="#{info.work}">工作:</p>
-            <span th:text="${application.infoMap['Work']}"></span><br>
-            <p th:text="#{info.ibasyo}">所在地:</p>
-            <span th:text="${application.infoMap['Ibasyo']}"></span><br>
-            <p th:text="#{info.ikitaibasyo}">想去:</p>
-            <span th:text="${application.infoMap['Ikitaibasyo']}"></span><br>
-        </ul>
+    <!--我-->
+    <div class="panel-fade active" id="panel-me">
+        <!--露娜大人CG小图-->
+        <div class="info-cg">
+            <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/sakurakouji.jpg"/>
+        </div>
+        <div class="info-text">
+            <ul class="info-text-list">
+                <p th:text="#{info.name}">称呼:</p>
+                <span th:text="${application.infoMap['Name']}"></span><br>
+                <p th:text="#{info.age}">芳龄:</p>
+                <span th:text="${application.infoMap['Age']}"></span><br>
+                <p th:text="#{info.hobby}">兴趣:</p>
+                <span th:text="${application.infoMap['Hobby']}"></span><br>
+                <p th:text="#{info.sikinatabemono}">喜欢吃:</p>
+                <span th:text="${application.infoMap['Sikinatabemono']}"></span><br>
+                <p th:text="#{info.favoritegame}">喜欢的游戏:</p>
+                <span th:text="${application.infoMap['Game']}"></span><br>
+                <p th:text="#{info.work}">工作:</p>
+                <span th:text="${application.infoMap['Work']}"></span><br>
+                <p th:text="#{info.ibasyo}">所在地:</p>
+                <span th:text="${application.infoMap['Ibasyo']}"></span><br>
+                <p th:text="#{info.ikitaibasyo}">想去:</p>
+                <span th:text="${application.infoMap['Ikitaibasyo']}"></span><br>
+            </ul>
+        </div>
     </div>
+    <!--热门标签-->
     <div style="text-align: center;font-weight: bold;font-size: 2.5rem;" th:text="#{blog.hotTags}">热门标签</div>
     <div class="tagBall">
         <a class="tag" th:each="tag:${application.hotTagList}" th:text="${tag.name+'('+tag.count+')'}"
@@ -307,11 +338,14 @@
 </nav>
 
 <!--非全局js数据保留-->
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/visual.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/infoPanel.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/tag3d.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.3200307/js/highlight.pack.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/visual.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/infoPanel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/tag3d.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/handler.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/highlight.pack.js"></script>
 <script>
+    hljs.initHighlightingOnLoad();
+    Intense(document.querySelectorAll('.art-show img'));
     //分页
     $('#left-page').click(function () {
         if ($('#currentPage').val() > 1) {

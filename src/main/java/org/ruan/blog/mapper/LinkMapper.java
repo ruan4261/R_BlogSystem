@@ -22,6 +22,14 @@ public interface LinkMapper {
     public Link linkLogin(Link link);
 
     /**
+     * 友链查重
+     *
+     * @param link
+     * @return
+     */
+    public Integer linkHttpIsExist(Link link);
+
+    /**
      * 新增一个友链
      *
      * @param link
@@ -64,6 +72,14 @@ public interface LinkMapper {
      * @return
      */
     public Integer deleteLink(Link link);
+
+    /**
+     * 纯加载token
+     * 只加载status=1的token
+     *
+     * @return
+     */
+    public List<String> getTokenList();
 
 
 }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.ruan.blog</groupId>
     <artifactId>ruan4261_blog</artifactId>
-    <version>1.0.3200307-Beta</version>
+    <version>1.0.5200326-Beta</version>
     <name>ruan4261_blog</name>
     <description>Ruan4261 web log.</description>
 
@@ -40,6 +40,23 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <!--引入AOP依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>mysql</groupId>

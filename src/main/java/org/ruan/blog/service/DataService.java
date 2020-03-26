@@ -3,6 +3,7 @@ package org.ruan.blog.service;
 import com.rometools.rome.io.FeedException;
 import org.ruan.blog.pojo.Article;
 import org.ruan.blog.pojo.Comment;
+import org.ruan.blog.pojo.Link;
 import org.ruan.blog.pojo.Origin;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,13 +23,19 @@ public interface DataService {
      * 1、标签新增 或 标签count++
      * 2、将content通过io流构造新的json文件，放至C:/data/Blog/articleJson/article_{id}.json
      * 内容为{"content":"#{content}"}
-     * 3、文章封面保存至C:/data/Blog/articleCovers/文件夹中，文件名为article_cover_{id}.jpg
+     * 3、根据contents(json格式)生成目录
+     * 4、RSS
      * 一个阶段报错，全部回滚
      *
      * @param article
+     * @param content
+     * @param contents
+     * @param isRSS
      * @return
+     * @throws IOException
+     * @throws FeedException
      */
-    public boolean addArticleLevelOne(Article article, String content, Integer isRSS) throws IOException, FeedException;
+    public boolean addArticleLevelOne(Article article, String content, String contents, Integer isRSS) throws IOException, FeedException;
 
     /**
      * 单纯增加一个来源项
@@ -49,11 +56,18 @@ public interface DataService {
     public boolean addComment(Comment comment);
 
     /**
-     * 更新一篇文章
-     * 大致用途:观看量 及 评分
+     * 刷新一篇文章的评分
      *
      * @param article
+     */
+    public void articleScoreFlush(Article article);
+
+    /**
+     * 评论点赞
+     *
+     * @param comment
      * @return
      */
-    public boolean updateArticleLook(Article article);
+    public boolean commentLikeTimesAdd(Comment comment);
+
 }

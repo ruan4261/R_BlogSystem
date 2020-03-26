@@ -1,4 +1,4 @@
-package org.ruan.blog.component;
+package org.ruan.blog.util;
 
 /**
  * 分页器

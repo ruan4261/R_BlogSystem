@@ -68,6 +68,14 @@ public interface ArticleMapper {
     public Integer updateArticle(Article article);
 
     /**
+     * 数据库自动计算，刷新文章评分和评分数
+     *
+     * @param article
+     * @return
+     */
+    public Integer flushArticleScore(Article article);
+
+    /**
      * <!保留方法>
      * 删除指定文章
      * 根据id

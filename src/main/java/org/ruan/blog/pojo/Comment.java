@@ -1,6 +1,7 @@
 package org.ruan.blog.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Comment 博客文章所属评论
@@ -15,6 +16,10 @@ public class Comment {
     private Integer score;
     //内容
     private String content;
+    //友链账号（非友链则为空）
+    private Link link;
+    //回复邮箱
+    private String email;
     //发表时间
     private Date time;
     //所属文章
@@ -27,6 +32,9 @@ public class Comment {
     private Integer likeTimes;
     //来源
     private Origin origin;
+
+    //子评论，只有顶级评论才拥有子评论
+    private List<Comment> subset;
 
     public Integer getId() {
         return id;
@@ -50,6 +58,22 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Link getLink() {
+        return link;
+    }
+
+    public void setLink(Link link) {
+        this.link = link;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Date getTime() {
@@ -98,5 +122,13 @@ public class Comment {
 
     public void setOrigin(Origin origin) {
         this.origin = origin;
+    }
+
+    public List<Comment> getSubset() {
+        return subset;
+    }
+
+    public void setSubset(List<Comment> subset) {
+        this.subset = subset;
     }
 }

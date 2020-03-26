@@ -12,9 +12,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.image_previewText = ' ';
     config.filebrowserBrowseUrl = '/lain/upload/image';
     config.filebrowserImageBrowseUrl = '/lain/upload/image';
-    config.filebrowserFlashBrowseUrl = '/lain/upload/image';
     config.filebrowserUploadUrl = '/lain/upload/image';
     config.filebrowserImageUploadUrl = '/lain/upload/image';
-    config.filebrowserFlashUploadUrl = '/lain/upload/image';
     config.fontSize_defaultLabel = '16px';
 };
