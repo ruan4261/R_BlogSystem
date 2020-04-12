@@ -15,7 +15,7 @@ public class HandleInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (request.getSession().getAttribute("role") != null && request.getSession().getAttribute("role").equals("runa")) {
+        if (request.getSession().getAttribute("") != null && request.getSession().getAttribute("").equals("")) {
             return true;
         } else {
             BlogAlgorithmHandler.setErrorMessage(request, 403, "您没有权限进入此页面。");

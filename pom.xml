@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.ruan.blog</groupId>
     <artifactId>ruan4261_blog</artifactId>
-    <version>1.0.5200326-Beta</version>
+    <version>1.0.6200407-Beta</version>
     <name>ruan4261_blog</name>
     <description>Ruan4261 web log.</description>
 

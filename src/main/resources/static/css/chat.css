@@ -1,0 +1,168 @@
+/**
+ * @Ver 1.0.620
+ * @ruan4261.com
+ */
+.chatbody {
+    padding: 0;
+    margin-top: 2rem;
+    top: -5rem;
+    background: #fff;
+    position: relative;
+    z-index: 2;
+    border-radius: 5px;
+    border: 3px solid #ccc;
+    font-weight: bold;
+    font-family: auto;
+}
+
+.chat-head {
+    color: white;
+    background: #333;
+    font-size: 2rem;
+    padding: 5px;
+    margin: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.button-group {
+    float: right;
+}
+
+@media all and (max-width: 768px) {
+    .chatbody {
+        top: -2.5rem;
+    }
+
+    .chat-head {
+        font-size: 1.6rem;
+    }
+
+    .button-group {
+        float: none;
+    }
+}
+
+.chat-board {
+    height: 500px;
+    overflow-y: auto;
+}
+
+.chat-write {
+    border-top: 1px solid #ddd;
+}
+
+.chat-util {
+    padding-left: 1rem;
+}
+
+.chat-util i {
+    cursor: pointer;
+    margin: 0.5rem 0.5rem;
+}
+
+.chat-util span, .chat-util input {
+    font-family: auto, serif;
+    position: relative;
+    top: -3px;
+    max-width: 80px;
+}
+
+.chat-util input {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #ccc;
+}
+
+#chat-content {
+    height: 100px;
+    width: 100%;
+    border: none;
+    overflow-y: auto;
+    resize: none;
+    outline: none;
+    font-family: auto, serif;
+    font-weight: bold;
+    font-size: 1.6rem;
+}
+
+.chat-button-group {
+    padding: 3px 2rem;
+}
+
+.chat-button-group button {
+    margin-right: 1rem;
+    font-size: 1.6rem;
+    font-family: auto, serif;
+    font-weight: bold;
+}
+
+.message-pack {
+    width: 100%;
+    padding: 1rem;
+}
+
+.message-pack * {
+    font-size: 1.6rem;
+    font-family: auto, serif;
+}
+
+.message-info {
+    width: 100%;
+}
+
+
+.message-name {
+
+}
+
+.message-time {
+    font-size: 1.2rem !important;
+    margin-left: 0.5rem !important;
+}
+
+.message-body {
+    margin: 0.5rem 1rem;
+    padding: 1rem;
+    background: #ccc;
+    border-radius: 1rem;
+    width: max-content;
+    max-width: 70%;
+    word-break: break-word;
+}
+
+.message-body * {
+    max-width: 95%;
+}
+
+.message-pack.me .message-info .message-name {
+    float: right;
+}
+
+.message-pack.me .message-info .message-time {
+    float: right;
+    position: relative;
+    top: 5px;
+}
+
+@media all and (max-width: 576px) {
+    .message-pack.me .message-info .message-time {
+        top: 1px;
+    }
+}
+
+.message-pack.me .message-body {
+    float: right;
+    background: #12B7F5;
+    color: white;
+}
+
+.message-pack.me .message-time {
+    margin-right: 1rem !important;
+}
+
+@media all and (max-width: 576px) {
+    .message-pack * {
+        font-size: 1.2rem;
+    }
+}

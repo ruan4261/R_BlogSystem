@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'ChatRoom | '+${application.headMap['title']}">Hello,ruan4261!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta name="description" th:content="${application.headMap['description']}">
+    <meta name="keywords" th:content="${application.headMap['keywords']}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="icon" href="https://ruan4261.com/pub/pro.jpg">
+    <!--CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/sweetalert.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/reset.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/style.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/chat.min.css" rel="stylesheet">
+    <!--全局声明Package-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/jquery1.12.4.min.js"></script>
+    <!--popper用于支持bootstrapVer4.4.1-->
+    <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/bootstrap.min.js"></script>
+    <!--全局弹窗插件sweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/sweetalert.min.js"></script>
+    <script>
+        //语言适配器，使用方法：将语言代码当做参数传进来
+        //此处源码为thymeleaf转义
+        //此处有一个用于idea中的format格式化锁，禁止排版
+        //@formatter:off
+        let langToggle = function (param) {
+            let queryString='[[${#request.queryString}]]';
+            let arr=queryString.split('&amp;');
+            for (let i=0;i<arr.length;){
+                if (arr[i].indexOf('lang=')!==-1){//自删
+                    arr.splice(i,1);
+                    continue;
+                }
+                i++;
+            }
+            queryString=arr.join("&");
+            if (queryString.trim()!==''){
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param+'&'+queryString;
+            }else {
+                window.location.href = '[[${#request.getRequestURL()}]]'+'?lang='+ param;
+            }
+        }
+        //@formatter:on
+        //最后，祝thymeleaf早日成佛，别渡我这个莎比
+    </script>
+</head>
+<body>
+<header th:replace="common/common.html::body-header"></header>
+<nav th:replace="common/common.html::left-nav"></nav>
+<section id="section" class="blog-body">
+    <div class="chatbody container">
+        <div class="chat-head row">
+            <div class="col-md-6 col-12">
+                <span>状态:</span>
+                <i class="fas fa-circle red" id="state-color"></i>
+                <span id="conn-state">未连接</span>
+                |
+                <span>在线人数:</span>
+                <span id="online-count">0</span>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="button-group">
+                    <button class="btn btn-success down-conn" type="button" onclick="chatboot(1)">连接</button>
+                    <button class="btn btn-danger on-conn" type="button" disabled onclick="chatboot(3)">断开</button>
+                </div>
+            </div>
+        </div>
+        <!--展示区-->
+        <div class="chat-board">
+        </div>
+        <!--书写区-->
+        <div class="chat-write">
+            <div class="chat-util">
+                <i class="fas fa-keyboard fa-2x" onclick="swal({
+                icon: 'warning',
+                title: '没想到吧！',
+                text: '这儿啥也没有，因为我懒得加插件。',
+                button: '爷知道了'
+                });"></i>
+                <i class="fas fa-folder fa-2x" onclick="swal({
+                icon: 'warning',
+                title: '没想到吧！',
+                text: '这儿啥也没有，因为我懒得加插件。',
+                button: '爷知道了'
+                });"></i>&nbsp;
+                <span>昵称:</span>
+                <input id="nickname" type="text">
+            </div>
+            <textarea id="chat-content"></textarea>
+            <input type="hidden" id="sid">
+            <div class="chat-button-group">
+                <button class="btn btn-outline-primary float-right" type="button" onclick="chatboot(2)">发送</button>
+                <button class="btn btn-outline-secondary float-right" type="button" onclick="clearPlace(1)">清空</button>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div style="background: #333;color: white;font-weight:bold;font-size:1.6rem;width: 100%;padding: 1rem;">
+            特殊代码：load(n);<br>直接在聊天框输入此代码可以查询过去N个小时的全员聊天记录。<br>例如：输入'load(24);'并发送，可以查询过去一天的聊天记录。<br>
+        </div>
+    </div>
+</section>
+<footer th:replace="common/common.html::body-footer"></footer>
+<div id="pack-copy" style="display: none">
+    <div class="message-pack">
+        <div class="message-info">
+            <span class="message-name deepskyblue"></span>
+            <span class="message-time"></span>
+            <div class="clearfix"></div>
+        </div>
+        <div class="message-body"></div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/visual.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/intense.min.js"></script>
+<script>
+    var box = $('#pack-copy').html();
+    var ws;
+    var operaflag = true;
+
+    function initWs(url) {
+        var ws = new WebSocket(url);
+        ws.onopen = function () {
+            //连接开启，将部分操作按钮置灰
+            $('.on-conn').removeAttr('disabled');
+            $('.down-conn').attr('disabled', 'disabled');
+            $('#conn-state').html('已连接');
+            $('#state-color').removeClass('red');
+            $('#state-color').addClass('limegreen');
+        }
+        ws.onmessage = function (data) {
+            //收到服务器信息，向窗口打印
+            var jsonObj;
+            try {
+                jsonObj = JSON.parse(data.data);
+            } catch (e) {
+                //系统信息，无需解读直接打印
+                printToBoard('[System]系统信息', null, data.data, false);
+                return;
+            }
+            if (jsonObj.sessionCount !== undefined) {
+                //人数推送讯息
+                $('#online-count').html(jsonObj.sessionCount);
+            } else if (jsonObj.useid !== undefined) {
+                //连接时id告知信息
+                $('#sid').val(jsonObj.useid);
+            } else if (jsonObj.infoType !== undefined) {
+                if (jsonObj.infoType === "set") {
+                    //历史信息输出
+                    printToBoard('[Info]历史', null, '<-----HistoryLoading开始加载历史记录----->', false);
+                    var set = jsonObj.infoSet;
+                    for (var i = 0; i < set.length; i++) {
+                        try {
+                            var jsonI = JSON.parse(set[i]);
+                            printToBoard('[ID' + jsonI.sid + ']' + jsonI.name, jsonI.pubTime, jsonI.content, jsonI.sid === $('#sid').val());
+                        } catch (e) {
+                            printToBoard('[Info]解析失败', '', '此条记录无法显示。', false);
+                        }
+                    }
+                    printToBoard('[Info]历史', null, '<-----HistoryLoaded历史记录加载完毕----->', false);
+                }
+            } else {
+                //新的讯息
+                printToBoard('[ID' + jsonObj.sid + ']' + jsonObj.name, jsonObj.pubTime, jsonObj.content.toString(), jsonObj.sid === $('#sid').val());
+            }
+        }
+        ws.onclose = function () {
+            //连接关闭，将部分操作按钮恢复
+            $('.on-conn').attr('disabled', 'disabled');
+            $('.down-conn').removeAttr('disabled');
+            $('#conn-state').html('未连接');
+            $('#state-color').removeClass('limegreen');
+            $('#state-color').addClass('red');
+            printToBoard('[System]系统信息', null, '您已失去同步。', false);
+        }
+        return ws;
+    }
+
+    /**
+     * 打印
+     */
+    async function printToBoard(name, time, body, ifme) {
+        var $box = $(box);
+        $box.find('.message-name').text(name);
+        $box.find('.message-time').html(time);
+        var cont = body.toString().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '<[检测到此处脚本，已被过滤]>');
+        $box.find('.message-body').html(cont === '' ? '&nbsp;' : cont);
+        if (ifme) {
+            $box.addClass('me');
+        }
+        if (name.indexOf('[System]') === 0 || name.indexOf('[Info]') === 0) {
+            $box.find('.message-name').removeClass('deepskyblue');
+            $box.find('.message-name').addClass('red');
+        }
+        //判断是否下拉窗口
+        var flag = false;
+        //总高度
+        var sh = document.querySelector(".chat-board").scrollHeight;
+        if ((sh - ($('.chat-board').height() + $('.chat-board').scrollTop())) < 5) {
+            flag = true;
+        }
+        //放入讯息
+        $('.chat-board').append($box);
+        if (flag) {
+            $('.chat-board').scrollTop(document.querySelector(".chat-board").scrollHeight);
+        }
+    }
+
+    /**
+     * 1-请求连接
+     * 2-输出信息到服务器
+     * 3-断开连接
+     * @param state
+     */
+    function chatboot(state) {
+        if (!operaflag) {
+            return;
+        }
+        if (!"WebSocket" in window) {
+            if ("MozWebSocket" in window) {
+                WebSocket = MozWebSocket;
+            } else {
+                alert("您的浏览器版本过低，不支持WebSocket，请更新您的浏览器！");
+                return;
+            }
+        }
+        if (state === 1) {
+            clearPlace(2);
+            if (ws === undefined || ws.readyState === 3) {
+                ws = initWs('wss://ruan4261.com:4901/ws');
+            }
+        } else if (state === 2) {
+            if ($('#chat-content').val() === "") {
+                swal({
+                    icon: 'warning',
+                    title: '发送失败！',
+                    text: '请您写点儿字吧，电报费起步价很贵的。',
+                    button: '爷知道了'
+                });
+                return;
+            }
+            if (ws !== undefined && ws.readyState === 1) {
+                if ($('#chat-content').val().indexOf('load') === 0) {
+                    var key = $('#chat-content').val().substring(5, $('#chat-content').val().indexOf(');'));
+                    historyLoad(key);
+                } else {
+                    var obj = {
+                        request: "sendMessage",
+                        name: $('#nickname').val(),
+                        content: $('#chat-content').val()
+                    }
+                    ws.send(JSON.stringify(obj));
+                }
+                $('#chat-content').val('');
+            } else {
+                swal({
+                    icon: 'warning',
+                    title: '发送失败！',
+                    text: '您暂未同步，请先连接服务器。',
+                    button: '爷知道了'
+                });
+            }
+        } else if (state === 3) {
+            if (ws !== undefined) ws.close();
+        }
+    }
+
+    /**
+     * 请求历史信息
+     */
+    function historyLoad(hour) {
+        if (!/(^[1-9]\d*$)/.test(hour)) return;
+        var obj = {
+            request: "historyLoad",
+            hour: parseInt(hour)
+        }
+        ws.send(JSON.stringify(obj));
+        printToBoard('[Info]请您留意', null, '服务器正在帮您加载历史记录，如数据量过大请耐心等待！如一分钟后未能获取到信息，则获取历史记录超时，请不要尝试获取时间过长的历史记录。', false);
+    }
+
+    /**
+     * 1-清空书写区
+     * 2-清空展示区
+     * @param state
+     */
+    function clearPlace(state) {
+        if (state === 1) {
+            $('#chat-content').val('');
+        } else if (state === 2) {
+            $('.chat-board').html('');
+        }
+    }
+</script>
+</html>

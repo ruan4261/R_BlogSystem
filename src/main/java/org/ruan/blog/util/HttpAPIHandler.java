@@ -49,7 +49,7 @@ public class HttpAPIHandler {
                     System.out.println(line);
                 }
             } else {
-                System.out.println("ResponseCode is an error code:" + conn.getResponseCode());
+                System.out.println("ResponseHttpCode is an error code:" + conn.getResponseCode());
                 return null;
             }
         } catch (MalformedURLException e) {

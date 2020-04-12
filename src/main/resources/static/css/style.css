@@ -1,5 +1,5 @@
 /**
- * @Ver 1.0.5200326
+ * @Ver 1.0.6200407
  * @ruan4261.com
  */
 /*header part*/
@@ -521,7 +521,7 @@ header {
 
 .blog-footer {
     border-top: 2px greenyellow solid;
-    position: absolute;
+    position: relative;
     font-size: 2rem;
     background: #323232;
     width: 100%;
@@ -531,17 +531,12 @@ header {
     overflow: hidden;
     padding-top: 30px;
     padding-bottom: 30px;
-}
-
-@media all and (max-width: 992px) {
-    .blog-footer {
-        padding-bottom: 50px;
-    }
+    z-index: 2;
 }
 
 @media all and (max-width: 768px) {
     .blog-footer {
-        padding-bottom: 30px;
+        padding-bottom: 55px;
         font-size: 1.5rem;
     }
 }
@@ -600,6 +595,7 @@ header {
     height: max-content;
     padding-bottom: 2rem;
     margin-bottom: 3rem;
+    z-index: 2;
 }
 
 @media all and (max-width: 1200px) {
@@ -753,11 +749,11 @@ header {
     }
 }
 
-.art-show p, .art-show span, .art-show strong, .art-show a, .art-show s, .art-show em , .art-show li, .art-show u{
+.art-show p, .art-show span, .art-show strong, .art-show a, .art-show s, .art-show em, .art-show li, .art-show u {
     font-family: auto;
 }
 
-.art-show li{
+.art-show li {
     text-align: left;
 }
 
@@ -889,6 +885,8 @@ header {
     font-size: 28px;
     line-height: 60px;
     padding-bottom: 3rem;
+    position: relative;
+    z-index: 2;
 }
 
 .turn-page.indiv {
@@ -948,6 +946,8 @@ header {
     padding: 5rem;
     margin-bottom: 5rem;
     box-shadow: 5px 5px 5px #6c757da6;
+    position: relative;
+    z-index: 2;
 }
 
 .about-title {
@@ -981,6 +981,8 @@ header {
     padding: 5rem;
     margin-bottom: 5rem;
     box-shadow: 5px 5px 5px #6c757da6;
+    position: relative;
+    z-index: 2;
 }
 
 .link-body > hr {
@@ -1137,6 +1139,8 @@ header {
     padding: 5rem;
     border-radius: 5rem;
     background: white;
+    position: relative;
+    z-index: 2;
 }
 
 .history-li h1 {
@@ -1241,6 +1245,8 @@ header {
     box-shadow: 5px 5px 5px #6c757da6;
     margin-bottom: 5rem;
     padding: 5rem;
+    position: relative;
+    z-index: 2;
 }
 
 .timeline-month-list {
@@ -1624,6 +1630,8 @@ header {
     box-shadow: 5px 5px 5px #6c757da6;
     border-radius: 0 6rem;
     margin-bottom: 5rem;
+    position: relative;
+    z-index: 2;
 }
 
 .comment-info {
@@ -1982,7 +1990,7 @@ header {
     font-weight: bold;
 }
 
-.link-form-title{
+.link-form-title {
     font-size: 2.5rem;
     margin-top: 1rem;
 }

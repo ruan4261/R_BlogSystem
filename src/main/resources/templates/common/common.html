@@ -9,24 +9,25 @@
     <meta name="description" th:content="${application.headMap['description']}">
     <meta name="keywords" th:content="${application.headMap['keywords']}">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg">
+    <link rel="icon" href="https://ruan4261.com/pub/pro.jpg">
     <!--CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/fontawesome/css/all.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/sweetalert.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/reset.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/tag3d.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/styles/an-old-hope.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/sweetalert.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/reset.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/style.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/tag3d.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/styles/an-old-hope.min.css" rel="stylesheet">
     <!--后台样式-->
-    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/css/backStyle.css" rel="stylesheet">
-    <!--全局声明Package-->
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/jquery1.12.4.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/css/backStyle.min.css" rel="stylesheet">
+    <!--全局js-->
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/jquery1.12.4.min.js"></script>
     <!--popper用于支持bootstrapVer4.4.1-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/bootstrap.min.js"></script>
     <!--全局弹窗插件sweetAlert-->
-    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/sweetalert.min.js"></script>
     <script>
         //语言适配器，使用方法：将语言代码当做参数传进来
         //此处源码为thymeleaf转义
@@ -71,6 +72,202 @@
     <div class="nav-background-image-overflow">
         <!--<img class="nav-background-image" th:src="@{/image/sakurakouji.jpg}"/>-->
     </div>
+    <!--dna背景特效-->
+    <style>
+        .site-canvas {
+            position: fixed;
+            z-index: 1;
+        }
+
+        .dna {
+            position: fixed;
+            top: 85%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 250px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .dna_section {
+            position: relative;
+            margin: 0 5px;
+            width: 5%;
+            height: 250px;
+            display: inline-block;
+        }
+
+        .dna_section .node {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            background: #5E0035;
+            -webkit-animation: 4s topNode ease-in-out infinite;
+            animation: 4s topNode ease-in-out infinite;
+        }
+
+        @-webkit-keyframes topNode {
+            0% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                top: 0;
+                z-index: 10;
+                opacity: 0.75;
+            }
+            25% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                top: 200px;
+                z-index: 0;
+                opacity: 0.75;
+            }
+            75% {
+                -webkit-transform: scale(0.25);
+                transform: scale(0.25);
+                opacity: 0.5;
+            }
+            100% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                top: 0;
+                opacity: 0.75;
+            }
+        }
+
+        @keyframes topNode {
+            0% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                top: 0;
+                z-index: 10;
+                opacity: 0.75;
+            }
+            25% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                top: 200px;
+                z-index: 0;
+                opacity: 0.75;
+            }
+            75% {
+                -webkit-transform: scale(0.25);
+                transform: scale(0.25);
+                opacity: 0.5;
+            }
+            100% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                top: 0;
+                opacity: 0.75;
+            }
+        }
+
+        .dna_section .node.bottom {
+            top: auto;
+            bottom: 0;
+            background: #5C80BC;
+            -webkit-animation: 4s bottomNode ease-in-out infinite;
+            animation: 4s bottomNode ease-in-out infinite;
+        }
+
+        @-webkit-keyframes bottomNode {
+            0% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                bottom: 0;
+                opacity: 0.75;
+            }
+            25% {
+                -webkit-transform: scale(0.25);
+                transform: scale(0.25);
+                opacity: 0.5;
+            }
+            50% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                bottom: 200px;
+                opacity: 0.75;
+            }
+            75% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                bottom: 0;
+                opacity: 0.75;
+            }
+        }
+
+        @keyframes bottomNode {
+            0% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                bottom: 0;
+                opacity: 0.75;
+            }
+            25% {
+                -webkit-transform: scale(0.25);
+                transform: scale(0.25);
+                opacity: 0.5;
+            }
+            50% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                bottom: 200px;
+                opacity: 0.75;
+            }
+            75% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                -webkit-transform: scale(0.5);
+                transform: scale(0.5);
+                bottom: 0;
+                opacity: 0.75;
+            }
+        }
+    </style>
+    <div class="site-canvas" id="app">
+        <div class="dna">
+            <div class="dna_section" v-for="(dna,i) in sequence">
+                <div class="node top" v-bind:style="{'animation-delay' : -(i * 300) + 'ms' }"></div>
+                <div class="node bottom" v-bind:style="{'animation-delay' : -(i * 300) + 'ms' }"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        (function () {
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    sequence: []
+                },
+                mounted() {
+                    this.sequence = new Array(Math.round(document.body.clientWidth / 70));
+                }
+            });
+        })();
+    </script>
     <!--fixed top总是存在-->
     <div class="container the-top">
         <!--小窗口下的的nav的打开按钮-->
@@ -148,7 +345,7 @@
             <div class="my-link">
                 <ul class="my-link-list">
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/qq.png"/>
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/image/qq.png"/>
                         <a href="tencent://message/?uin=2598055586&Site=&Menu=yes" target="_blank"></a>
                     </li>
                     <li class="my-link-list-li">
@@ -165,22 +362,22 @@
                     </li>
                     <br class="hidden-more-992"/>
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/email.svg"
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/image/email.svg"
                              title="ruan4261@foxmail.com"/>
                         <a href="mailto:ruan4261@foxmail.com" target="_blank"></a>
                     </li>
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/twitter.png"
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/image/twitter.png"
                              title="Twitter@ruan4261"/>
                         <a href="https://twitter.com/ruan4261" target="_blank"></a>
                     </li>
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/bilibili.png"
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/image/bilibili.png"
                              title="BiliBili@林时雨"/>
                         <a href="https://space.bilibili.com/23934967" target="_blank"></a>
                     </li>
                     <li class="my-link-list-li">
-                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/wangyiyun.png"
+                        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/image/wangyiyun.png"
                              title="网易云音乐@ruan4261"/>
                         <a href="https://music.163.com/#/user/home?id=395832685" target="_blank"></a>
                     </li>
@@ -201,7 +398,7 @@
     </div>
     <!--头像-->
     <div class="left-nav-image">
-        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/pro.jpg"/>
+        <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/image/pro.jpg"/>
     </div>
     <div class="clearfix"></div>
     <div class="left-nav-title float-left">
@@ -271,7 +468,7 @@
     <div class="panel-fade active" id="panel-me">
         <!--露娜大人CG小图-->
         <div class="info-cg">
-            <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/image/sakurakouji.jpg"/>
+            <img src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/image/sakurakouji.jpg"/>
         </div>
         <div class="info-text">
             <ul class="info-text-list">
@@ -338,11 +535,11 @@
 </nav>
 
 <!--非全局js数据保留-->
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/visual.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/infoPanel.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/tag3d.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/handler.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.5200326/js/highlight.pack.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/visual.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/infoPanel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/tag3d.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/handler.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog_static@1.0.6200407/js/highlight.pack.min.js"></script>
 <script>
     hljs.initHighlightingOnLoad();
     Intense(document.querySelectorAll('.art-show img'));

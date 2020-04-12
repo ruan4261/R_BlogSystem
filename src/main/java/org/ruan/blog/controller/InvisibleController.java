@@ -10,6 +10,7 @@ import org.ruan.blog.service.DataService;
 import org.ruan.blog.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,6 +46,19 @@ public class InvisibleController {
 
     @Autowired
     private HttpRequestHandler httpRequestHandler;
+
+    /**
+     * 管理员登录
+     *
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public Object AdminLogin(HttpServletRequest httpServletRequest) {
+        String admin = httpServletRequest.getParameter("");
+        if (admin != null && admin.equals("")) httpServletRequest.getSession().setAttribute("", "");
+        return "redirect:/";
+    }
 
     /**
      * 登出，销毁session

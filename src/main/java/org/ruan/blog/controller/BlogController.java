@@ -115,22 +115,13 @@ public class BlogController {
     @RequestMapping(value = "/message", method = RequestMethod.GET)
     public Object messagePage(HttpServletRequest httpServletRequest) {
         httpServletRequest.setAttribute("title", "你目前位于Message页面");
-        httpServletRequest.setAttribute("message", "此页面还未上线，预计于2020年中旬上线。");
+        httpServletRequest.setAttribute("message", "此页面还未上线，他已经不会上线了。");
         return "index/notice";
     }
 
-    /**
-     * 聊天室页面
-     * WebSocket
-     *
-     * @param httpServletRequest
-     * @return
-     */
-    @RequestMapping(value = "/chat", method = RequestMethod.GET)
-    public Object chatPage(HttpServletRequest httpServletRequest) {
-        httpServletRequest.setAttribute("title", "你目前位于Chat页面");
-        httpServletRequest.setAttribute("message", "此页面还未上线，预计于2020年下旬上线。");
-        return "index/notice";
+    @RequestMapping(value = "/chat",method = RequestMethod.GET)
+    public Object chatRoom(){
+        return "chat";
     }
 
     /**

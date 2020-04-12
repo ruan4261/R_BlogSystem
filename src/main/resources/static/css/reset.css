@@ -1,5 +1,5 @@
 /**
- * @Ver 1.0.42003131
+ * @Ver 1.0.6200407
  * @ruan4261.com
  */
 @font-face {
@@ -164,4 +164,8 @@ blockquote * {
 
 .hotpink {
     color: hotpink !important;
+}
+
+article{
+    z-index: 2;
 }
