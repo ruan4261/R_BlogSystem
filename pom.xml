@@ -89,7 +89,7 @@
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
-            <version>1.20</version>
+            <version>1.21</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.rometools/rome -->
         <dependency>
